@@ -1,6 +1,4 @@
-var //nsh =  require('node-syntaxhighlighter'),
-    //codeLang =  nsh.getLanguage('js'),
-    selectedLang = 'jsAjax',
+var selectedLang = 'jsAjax',
     credsToken = siteid = contentUrl = userid = "",
     productVersion = 10.0,
     apiVersion = 2.3,
@@ -21,7 +19,7 @@ func.getServerSettingsUnauthenticated = function() {
     "node" : "authinfo"
   };
   var settings = {
-    url : "https://127.0.0.1:3000/api/q",
+    url : "/api/q",
     method : "POST",
     data : callVars,
     contentType : "application/x-www-form-urlencoded"
@@ -57,7 +55,7 @@ func.apiSignin = function () {
   body = body.replace(/(?:password=')(.*)(?:'>)/,"password='****'>");
   writeCode(selectedLang,method,url,headers,body);
   var settings = {
-    url : "https://127.0.0.1:3000/api/q",
+    url : "/api/q",
     method : "POST",
     data : callVars,
     contentType : "application/x-www-form-urlencoded"
@@ -263,7 +261,7 @@ var queryAPI = function (xmlPath) {
     "node" : xmlPath
   };
   var settings = {
-    url : "https://127.0.0.1:3000/api/q",
+    url : "/api/q",
     method : "POST",
     data : callVars,
     contentType : "application/x-www-form-urlencoded"

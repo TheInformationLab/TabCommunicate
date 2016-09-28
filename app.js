@@ -1,17 +1,12 @@
 const express = require('express');
-var port = process.env.PORT || 3000,
-var fs = require('fs'),
-    http = require('http'),
-    https = require('https'),
+var port = process.env.PORT || 3000;
+var http = require('http'),
     app = express();
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
 
-var options = {
-  key: fs.readFileSync(__dirname + '/ssl/2016TIL.key'),
-  cert: fs.readFileSync(__dirname + '/ssl/2016TIL.crt')
-}
+var options = {};
 
 app.use(cors());
 
@@ -42,7 +37,7 @@ app.use('/api/q', function(req, res) {
   });
 });
 
-var server = https.createServer(options, app).listen(port, function() {
+app.listen(port, function() {
   console.log("Listening on https://127.0.0.1:3000");
 });
 
