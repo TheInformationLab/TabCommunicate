@@ -1,0 +1,51 @@
+#inputDiv {
+  width:50%;
+  height: 50%;
+  position: fixed;
+  top:0;
+  left:0;
+  overflow-y: auto;
+}
+
+#codeDiv {
+  width:50%;
+  height: 50%;
+  position: fixed;
+  top:0;
+  right:0;
+  overflow-y: auto;
+}
+
+#outputDiv {
+  height: 50%;
+  width: 100%;
+  position: fixed;
+  bottom:0;
+  left:0;
+  overflow-y: auto;
+}
+
+#serverUrl {
+  width: 300px;
+}
+
+.tab-content{
+	display: none;
+	padding: 15px;
+ }
+
+.tab-content.current{
+	display: inherit;
+}
+
+.scratch-pad {
+  width: 100%;
+  height: 75%;
+  word-wrap: break-word;
+  overflow-y: scroll;
+  border: 0;
+}
+
+.hljs {
+  background: none;
+}

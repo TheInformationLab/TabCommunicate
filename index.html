@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>TabCommunicate by Craig Bloodworth | The Information Lab</title>
+    <link href="css/shCoreDefault.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="/css/app.css">
+  </head>
+  <body>
+    <div class="card" id="inputDiv">
+      <h5 class="card-header">Controls</h5>
+      <div class="card-block">
+        <div id="input"></div>
+      </div>
+    </div>
+    <div class="card" id="codeDiv">
+      <h5 class="card-header">Code</h5>
+      <div class="card-block">
+        <div id="codeLang"></div>
+        <div id="code"></div>
+      </div>
+    </div>
+    <div id="outputDiv" class="card">
+      <div class="card-header">
+        <ul class="nav nav-pills card-header-pills pull-xs-left">
+          <li class="nav-item"><a href="#" class="nav-link active" data-tab="response">Response</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" data-tab="resp-table">Table</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" data-tab="resp-csv">CSV</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" data-tab="resp-variables">Variables</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" data-tab="scratch-pad">Scratch Pad</a></li>
+        </ul>
+      </div>
+      <div id="response" class="card-block tab-content current">
+      </div>
+      <div id="resp-table" class="card-block tab-content">
+
+      </div>
+      <div id="resp-csv" class="card-block tab-content">
+
+      </div>
+      <div id="resp-variables" class="card-block tab-content">
+
+      </div>
+      <div id="scratch-pad" class="card-block tab-content">
+        <textarea type="text" class="scratch-pad"></textarea>
+      </div>
+    </div>
+  </body>
+  <script src="js/lib/jquery.min.js"></script>
+  <script src="js/lib/tether.min.js"></script>
+  <script src="js/lib/bootstrap.min.js"></script>
+  <script src="js/bin/library.js"></script>
+  <script src="js/bin/func.js"></script>
+  <script src="js/bin/control.js"></script>
+</html>
