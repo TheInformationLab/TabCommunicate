@@ -22,6 +22,11 @@ app.use('/api/q', function(req, res) {
   var options = req.body;
   var dataType = options.respLang;
   var node = options.node;
+  if (node == "authinfo") {
+    options.qs = { format: 'xml' };
+  }
+  delete options.respLang;
+  delete options.node;
   request(options, function (error, response, body) {
     if (error) {
       var obj = {};

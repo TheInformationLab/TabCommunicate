@@ -24,6 +24,27 @@ var init = function() {
   $('#serverBtn').click(func.getServerSettingsUnauthenticated);
   $('#loginBtn').click(func.apiSignin);
 
+  $('#serverUrl').blur(function () {
+    setCookie('serverUrl',$('#serverUrl').val());
+    func.getServerSettingsUnauthenticated();
+  });
+  $('#site').blur(function () {
+    setCookie('site',$('#site').val());
+  });
+  $('#username').blur(function () {
+    setCookie('username',$('#username').val());
+  });
+
+  if (getCookie('serverUrl')) {
+    $('#serverUrl').val(getCookie('serverUrl'));
+  }
+  if (getCookie('site')) {
+    $('#site').val(getCookie('site'));
+  }
+  if (getCookie('username')) {
+    $('#username').val(getCookie('username'));
+  }
+
   $('#codeLang').append('<div class="btn-group" role="group" aria-label="Basic example">\
       <button type="button" class="btn btn-primary btn-sm" data-lang="jsAjax">JS AJAX</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpHttpRequest">PHP HttpRequest</button>\
@@ -38,6 +59,22 @@ var apiControls = function () {
   if (!$('.funcForm').length) {
     var listFunctions = {
       nofunc : {label : ' - Select API Endpoint -', version : 1.0, formItems : []},
+      apiAddUsertoSite : {label : 'Add User to Site', version : 1.0, formItems : [
+        {
+          label: 'user-name',
+          type : 'text'
+        },
+        {
+          label: 'site-role',
+          type: 'dropdown',
+          values: ['Interactor','Publisher','SiteAdministrator','Unlicensed','UnlicensedWithPublish','Viewer','ViewerWithPublish']
+        },
+        {
+          label: 'auth-setting',
+          type: 'dropdown',
+          values: ['ServerDefault','SAML']
+        }
+      ]},
       apiAddDatasourceFavorites : {label : 'Add Datasource to Favorites', version : 2.3, formItems : [
         {
           label: 'user-id',
@@ -166,7 +203,17 @@ var apiControls = function () {
     $.each(formItems, function(i, val) {
       switch (val.type) {
         case 'text':
-          $('.funcForm').append('<label class="sr-only dynamic" for="'+val.label+'">user-id</label><input type="text" class="form-control dynamic" id="'+val.label+'" placeholder="'+val.label+'"></input>');
+          $('.funcForm').append('<label class="sr-only dynamic" for="'+val.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+val.label+'" placeholder="'+val.label+'"></input>');
+          break;
+        case 'dropdown':
+          $('.funcForm').append('<select class="form-control dynamic" id="'+val.label+'"></select>');
+          var dynDrop = $('#' + val.label);
+          var dropItems = val.values;
+          $.each(dropItems, function(i, val) {
+            dynDrop.append(
+                $('<option></option>').val(val).html(val)
+            );
+          });
           break;
       }
     });

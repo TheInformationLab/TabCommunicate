@@ -4,17 +4,23 @@ var selectedLang = 'jsAjax',
     apiVersion = 2.3,
     method = url = headers = body = undefined;
 
+if (getCookie('apiVersion')) {
+  apiVersion = getCookie('apiVersion');
+}
+
 var func = {};
 
 func.getServerSettingsUnauthenticated = function() {
   method = 'GET',
-  url = $('#serverUrl').val()+'/manual/auth?language=en&format=xml&client_type=desktop',
-  headers = body = undefined;
+  url = $('#serverUrl').val()+'/manual/auth?format=xml',
+  headers = {
+    'User-Agent' : 'TabCommunicate'
+  };
+  body = undefined;
   writeCode(selectedLang,method,url,headers,body);
   var callVars = {
     "url": url,
     "method": method,
-    "body": body,
     "respLang": "xml",
     "node" : "authinfo"
   };
@@ -73,6 +79,17 @@ func.apiSignin = function () {
   }).fail(function (jqXHR, textStatus) {
     writeResponse('json',textStatus);
   });
+}
+
+func.apiAddUsertoSite = function(run) {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t<user name="'+$('#user-name').val()+'"\n\t\tsiteRole="'+$('#site-role').val()+'" \n\t\tauthSetting="'+$('#auth-setting').val()+'" />\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.user') }
 }
 
 func.apiAddDatasourceFavorites = function(run) {
@@ -345,6 +362,7 @@ var writeCSV = function(dataType, body, node) {
 }
 
 var refreshVariables = function () {
+  setCookie('apiVersion', apiVersion);
   var html = '<strong>API Version</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ apiVersion + '<br/>\
   <strong>Token</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ credsToken + '<br/>\
     <strong>Site ID</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ siteid + '<br/>\
@@ -379,4 +397,26 @@ function formatXml(xml) {
         pad += indent;
     });
     return formatted;
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
 }
