@@ -49,3 +49,7 @@
 .hljs {
   background: none;
 }
+
+pre {
+  white-space: pre-wrap;
+}

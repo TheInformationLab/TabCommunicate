@@ -47,6 +47,7 @@ var init = function() {
 
   $('#codeLang').append('<div class="btn-group" role="group" aria-label="Basic example">\
       <button type="button" class="btn btn-primary btn-sm" data-lang="jsAjax">JS AJAX</button>\
+      <button type="button" class="btn btn-secondary btn-sm" data-lang="nodeRequest">NodeJS Request</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpHttpRequest">PHP HttpRequest</button>\
     </div>');
 

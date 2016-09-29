@@ -21,6 +21,7 @@ func.getServerSettingsUnauthenticated = function() {
   var callVars = {
     "url": url,
     "method": method,
+    "headers" : headers,
     "respLang": "xml",
     "node" : "authinfo"
   };
@@ -298,6 +299,10 @@ var writeCode = function(language, method, url, headers, body) {
     case 'jsAjax':
       $('#code').html('<pre><code class="JavaScript" id="scriptOutput"></code></pre>');
       output = lib.jsAjax(method, url, headers,body);
+      break;
+    case 'nodeRequest':
+    $('#code').html('<pre><code class="JavaScript" id="scriptOutput"></code></pre>');
+      output = lib.nodeRequest(method, url, headers, body);
       break;
     case 'phpHttpRequest':
     $('#code').html('<pre><code class="PHP" id="scriptOutput"></code></pre>');
