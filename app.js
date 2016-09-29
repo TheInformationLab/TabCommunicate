@@ -46,6 +46,11 @@ app.listen(port, function() {
   console.log("Listening on https://127.0.0.1:3000");
 });
 
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(3080);
+
 var xmlParser = require('simple-xml2json');
 var js2table = require('json-to-table');
 
