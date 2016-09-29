@@ -46,7 +46,7 @@ request(options, function (error, response, body) {\n\
 lib.phpHttpRequest = function (method,url,headers,body) {
   var codebase = "<?php\n\
   $request = new HttpRequest();\n\
-  $request->setUrl('" + url + "');\n\
+  $request->setUrl( '" + url + "' );\n\
   $request->setMethod(HTTP_METH_"+method+");\n\
   $request->setHeaders(array(\n\
   \t'Accept' => 'text/xml'\n\

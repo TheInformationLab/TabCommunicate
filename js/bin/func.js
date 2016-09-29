@@ -258,7 +258,7 @@ func.apiQueryWorkbooksforSite = function(run) {
   if (run) { queryAPI('tsresponse.workbooks.workbook') }
 }
 
-func.apiQueryWorkbooksforUser = function() {
+func.apiQueryWorkbooksforUser = function(run) {
   method = 'GET',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users/'+$('#user-id').val()+'/workbooks',
   headers = {
@@ -267,6 +267,34 @@ func.apiQueryWorkbooksforUser = function() {
   body = undefined;
   writeCode(selectedLang,method,url,headers,body);
   if (run) { queryAPI('tsresponse.workbooks.workbook') }
+}
+
+func.apiSignOut = function() {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signout',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  queryAPI('authinfo');
+}
+
+func.apiUpdateUser = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users/'+$('#user-id').val(),
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t<user\n\t';
+  if ($('#new-full-name').val()) { body += '  fullName="'+$('#new-full-name').val()+'"\n\t' }
+  if ($('#new-email').val()) { body += '  email="'+$('#new-email').val()+'"\n\t' }
+  if ($('#new-password').val()) { body += '  password="'+$('#new-password').val()+'"\n\t' }
+  if ($('#new-site-role').val() != '- New Site Role -') { body += '  siteRole="'+$('#new-site-role').val()+'"\n\t' }
+  if ($('#new-auth-setting').val() != '- New Auth Setting -') { body += '  authSetting="'+$('#new-auth-setting').val()+'"\n\t' }
+  body += '/>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.user') }
 }
 
 var queryAPI = function (xmlPath) {

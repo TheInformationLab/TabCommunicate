@@ -1,29 +1,37 @@
 var init = function() {
-  $('#input').append("<form class='form-inline' onsubmit='return false;'>\
+  $('#input').append("<form onsubmit='return false;'>\
                         <div class='form-group'>\
                           <label class='sr-only' for='serverUrl'>Server URL</label>\
-                          <input type='text' class'form-control' id='serverUrl' placeholder='Server URL' value=''/>\
+                          \
+                          <input type='text' class='form-control' id='serverUrl' placeholder='Server URL' value=''/>\
                         </div>\
-                        <button type='submit' id='serverBtn' class='adv btn btn-primary btn-sm'>Go</button>\
-                      </form>");
-  $('#input').append("<form class='form-inline' onsubmit='return false;'>\
-                        <div class='form-group'>\
+                        <div class='row'>\
+                          <div class='col-xs-2'>\
                           <label class='sr-only' for='site'>Site ID</label>\
-                          <input type='text' id='site' placeholder='Site ID' value=''/>\
-                        </div>\
-                        <div class='form-group'>\
+                          <input type='text' class='form-control' id='site' placeholder='Site ID' value=''/>\
+                          </div>\
+                          <div class='col-xs-3'>\
                           <label class='sr-only' for='username'>Username</label>\
-                          <input type='text' id='username' placeholder='Username' value=''/>\
-                        </div>\
-                        <div class='form-group'>\
+                          <input type='text' class='form-control' id='username' placeholder='Username' value=''/>\
+                          </div>\
+                          <div class='col-xs-3'>\
                           <label class='sr-only' for='password'>Password</label>\
-                          <input type='password' id='password' placeholder='Password' value=''/>\
+                          <input type='password' class='form-control' id='password' placeholder='Password' value=''/>\
+                          </div>\
+                          <div class='col-xs-2'>\
+                          <button type='submit' id='loginBtn' class='btn btn-primary form-control'>Sign In</button>\
+                          </div>\
+                          <div class='col-xs-2'>\
+                          <button type='submit' id='logoutBtn' class='btn btn-danger form-control'>Sign Out</button>\
+                          </div>\
                         </div>\
-                        <button type='submit' id='loginBtn' class='btn btn-primary btn-sm'>Sign In</button>\
                       </form>");
   $('#serverBtn').click(func.getServerSettingsUnauthenticated);
   $('#loginBtn').click(func.apiSignin);
-
+  $('#logoutBtn').click(function () {
+    func.apiSignOut();
+    $('#apiControlForm').remove();
+  });
   $('#serverUrl').blur(function () {
     setCookie('serverUrl',$('#serverUrl').val());
     func.getServerSettingsUnauthenticated();
@@ -45,7 +53,7 @@ var init = function() {
     $('#username').val(getCookie('username'));
   }
 
-  $('#codeLang').append('<div class="btn-group" role="group" aria-label="Basic example">\
+  $('#codeLang').append('<div class="btn-group" role="group" aria-label="Select Code Language">\
       <button type="button" class="btn btn-primary btn-sm" data-lang="jsAjax">JS AJAX</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="nodeRequest">NodeJS Request</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpHttpRequest">PHP HttpRequest</button>\
@@ -144,9 +152,37 @@ var apiControls = function () {
           label : 'user-id',
           type : 'text'
         }
+      ]},
+      apiUpdateUser : {label : 'Update User', version : 1.0, formItems : [
+        {
+          label : 'user-id',
+          type : 'text'
+        },
+        {
+          label : 'new-full-name',
+          type : 'text'
+        },
+        {
+          label : 'new-email',
+          type : 'text'
+        },
+        {
+          label : 'new-password',
+          type : 'text'
+        },
+        {
+          label : 'new-site-role',
+          type: 'dropdown',
+          values: ['- New Site Role -','Interactor','Publisher','SiteAdministrator','Unlicensed','UnlicensedWithPublish','Viewer','ViewerWithPublish']
+        },
+        {
+          label : 'new-auth-setting',
+          type: 'dropdown',
+          values: ['- New Auth Setting -','ServerDefault','SAML']
+        }
       ]}
     };
-    $('#input').append("<form onsubmit='return false;'><div class='form-group funcForm'>\
+    $('#input').append("<form onsubmit='return false;' id='apiControlForm'><div class='form-group funcForm'>\
                         <select id='listItems' class='form-control'></select>\
                         </div><button type='submit' id='listBtn' class='btn btn-primary btn-sm'>Run</button>");
     var listSelect = $('#listItems');
@@ -183,13 +219,7 @@ var apiControls = function () {
       });
       func[$('#listItems').val()](false);
       writeCode(selectedLang,method,url,headers,body);
-      $('.funcForm input.dynamic').keypress(function( event ) {
-        if ( event.which == 13 ) {
-           event.preventDefault();
-        }
-        func[$('#listItems').val()](false);
-      });
-      $('.funcForm select.dynamic').change(function() {
+      $('.funcForm .dynamic').blur(function( event ) {
         func[$('#listItems').val()](false);
       });
     });
@@ -218,13 +248,8 @@ var apiControls = function () {
           break;
       }
     });
-    $('.funcForm input.dynamic').keypress(function( event ) {
-      if ( event.which == 13 ) {
-         event.preventDefault();
-      }
-      func[$('#listItems').val()](false);
-    });
-    $('.funcForm select.dynamic').change(function() {
+
+    $('.funcForm .dynamic').blur(function( event ) {
       func[$('#listItems').val()](false);
     });
   }
