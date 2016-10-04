@@ -22,8 +22,11 @@ app.use('/api/q', function(req, res) {
   var options = req.body;
   var dataType = options.respLang;
   var node = options.node;
+  var noResponse = false;
   if (node == "authinfo") {
     options.qs = { format: 'xml' };
+  } else if (node == "none") {
+    noResponse = true;
   }
   delete options.respLang;
   delete options.node;
@@ -31,13 +34,21 @@ app.use('/api/q', function(req, res) {
     if (error) {
       var obj = {};
       obj.raw = error;
-      obj.html = "";
-      obj.csv = "";
+      obj.html = error;
+      obj.csv = error;
       res.send(obj);
     } else {
-      parseOutput(dataType, body, node, function(obj) {
+      if (noResponse) {
+        var obj = {};
+        obj.raw = "Command Executed. Tableau Server doesn't return a response body to this command.";
+        obj.html = "Command Executed. Tableau Server doesn't return a response body to this command.";
+        obj.csv = "Command Executed. Tableau Server doesn't return a response body to this command.";
         res.send(obj);
-      });
+      } else {
+        parseOutput(dataType, body, node, function(obj) {
+          res.send(obj);
+        });
+      }
     }
   });
 });
