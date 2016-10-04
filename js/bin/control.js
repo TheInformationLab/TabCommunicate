@@ -22,7 +22,7 @@ var init = function() {
                           <button type='submit' id='loginBtn' class='btn btn-primary form-control'>Sign In</button>\
                           </div>\
                           <div class='col-xs-2'>\
-                          <button type='submit' id='logoutBtn' class='btn btn-danger form-control'>Sign Out</button>\
+                          <button type='submit' id='logoutBtn' class='btn btn-info form-control'>Sign Out</button>\
                           </div>\
                         </div>\
                       </form>");
@@ -68,6 +68,35 @@ var apiControls = function () {
   if (!$('.funcForm').length) {
     var listFunctions = {
       nofunc : {label : ' - Select API Endpoint -', version : 1.0, formItems : []},
+      apiAddDatasourceFavorites : {label : 'Add Datasource to Favorites', version : 2.3, formItems : [
+        {
+          label: 'user-id',
+          type: 'text'
+        },
+        {
+          label: 'favorite-label',
+          type: 'text'
+        },
+        {
+          label: 'datasource-id',
+          type: 'text'
+        }
+      ], helpLink: 'Add_Datasource_to_Favorites'},
+      apiAddTagstoWorkbook : {label : 'Add Tags to Workbook', version : 1.0, formItems : [
+        {
+          label: 'workbook-id',
+          type: 'text'
+        },
+        {
+          type: 'multiple',
+          items: [
+            {
+              label: 'tag',
+              type : 'text'
+            }
+          ]
+        }
+      ], undoFunction: 'apiDeleteTagfromWorkbook', undoVersion: 1.0, helpLink: 'Add_Tags_to_Workbook'},
       apiAddUsertoSite : {label : 'Add User to Site', version : 1.0, formItems : [
         {
           label: 'user-name',
@@ -83,41 +112,49 @@ var apiControls = function () {
           type: 'dropdown',
           values: ['ServerDefault','SAML']
         }
-      ]},
-      apiAddDatasourceFavorites : {label : 'Add Datasource to Favorites', version : 2.3, formItems : [
+      ], undoFunction: 'apiRemoveUserfromSite', undoVersion: 1.0, helpLink : 'Add_User_to_Site'},
+      apiCreateGroup : {label : 'Create Group', version : 2.0, formItems : [
         {
-          label: 'user-id',
-          type: 'text'
-        },
-        {
-          label: 'favorite-label',
-          type: 'text'
-        },
-        {
-          label: 'datasource-id',
-          type: 'text'
+          label: 'new-tableau-server-group-name',
+          type : 'text'
         }
-      ]},
-      apiGetUsersonSite : {label : 'Get Users on Site', version : 1.0, formItems : []},
+      ], undoFunction: 'apiDeleteGroup', undoVersion : 2.1, helpLink: 'Create_Group'},
+      apiDeleteGroup : {label : 'Delete Group', version : 2.1, formItems : [
+        {
+          label: 'group-id',
+          type : 'text'
+        }
+      ], helpLink: 'Delete_Group'},
+      apiDeleteTagfromWorkbook : {label : 'Delete Tag from Workbook', version : 1.0, formItems : [
+        {
+          label: 'workbook-id',
+          type : 'text'
+        },
+        {
+          label: 'tag-name',
+          type : 'text'
+        }
+      ], helpLink: 'Delete_Tag_from_Workbook'},
+      apiGetUsersonSite : {label : 'Get Users on Site', version : 1.0, formItems : [], helpLink: 'Get_Users_on_Site'},
       apiQueryDatasource : {label : 'Query Datasource', version : 1.0, formItems : [
         {
           label : 'datasource-id',
           type : 'text'
         }
-      ]},
+      ], },
       apiQueryDatasourceConnections : {label : 'Query Datasource Connections', version : 2.3, formItems : [
         {
           label : 'datasource-id',
           type : 'text'
         }
-      ]},
+      ], helpLink: 'Query_Datasource_Connections'},
       apiQueryDatasourcePermissions : {label : 'Query Datasource Permissions', version : 2.0, formItems : [
         {
           label : 'datasource-id',
           type : 'text'
         }
-      ]},
-      apiQueryDatasources : {label : 'Query Datasources', version : 1.0, formItems : []},
+      ], helpLink: 'Query_Datasource_Permissions'},
+      apiQueryDatasources : {label : 'Query Datasources', version : 1.0, formItems : [], helpLink: 'Query_Datasources'},
       apiQueryDefaultPermissions : {label : 'Query Default Permissions', version : 2.1, formItems : [
         {
           label : 'project-id',
@@ -128,31 +165,37 @@ var apiControls = function () {
           type : 'dropdown',
           values : ['datasources','workbooks']
         }
-      ]},
+      ], helpLink: 'Query_Datasource_Permissions'},
       apiQueryExtractRefreshTasks : {label : 'Query Extract Refresh Tasks', version : 2.2, formItems : [
         {
           label : 'schedule-id',
           type : 'text'
         }
-      ]},
-      apiQueryGroups : {label : 'Query Groups', version : 2.0, formItems : []},
+      ], helpLink: 'Query_Extract_Refresh_Tasks'},
+      apiQueryGroups : {label : 'Query Groups', version : 2.0, formItems : [], helpLink: 'Query_Groups'},
       apiQueryJob : {label : 'Query Job', version : 2.0, formItems : [
         {
           label : 'job-id',
           type : 'text'
         }
-      ]},
-      apiQuerySchedules : {label : 'Query Schedules', version : 2.2, formItems : []},
-      apiQuerySites : {label : 'Query Sites', version : 1.0, formItems : []},
-      apiQueryProjects : {label : 'Query Projects', version : 2.0, formItems : []},
-      apiQueryViewsforSite : {label : 'Query Views for Site', version : 2.2, formItems : []},
-      apiQueryWorkbooksforSite : {label : 'Query Workbooks for Site', version : 2.3, formItems : []},
+      ], helpLink: 'Query_Job'},
+      apiQuerySchedules : {label : 'Query Schedules', version : 2.2, formItems : [], helpLink: 'Query_Schedules'},
+      apiQuerySites : {label : 'Query Sites', version : 1.0, formItems : [], helpLink: 'Query_Sites'},
+      apiQueryProjects : {label : 'Query Projects', version : 2.0, formItems : [], helpLink: 'Query_Projects'},
+      apiQueryViewsforSite : {label : 'Query Views for Site', version : 2.2, formItems : [], helpLink: 'Query_Views_for_Site'},
+      apiQueryWorkbooksforSite : {label : 'Query Workbooks for Site', version : 2.3, formItems : [], helpLink: 'Query_Workbooks_for_Site'},
       apiQueryWorkbooksforUser : {label : 'Query Workbooks for User', version : 1.0, formItems : [
         {
           label : 'user-id',
           type : 'text'
         }
-      ]},
+      ], helpLink: 'Query_Workbooks_for_User'},
+      apiRemoveUserfromSite : {label : 'Remove User from Site', version : 1.0, formItems : [
+        {
+          label : 'user-id',
+          type : 'text'
+        }
+      ], helpLink: 'Remove_User_from_Site'},
       apiUpdateUser : {label : 'Update User', version : 1.0, formItems : [
         {
           label : 'user-id',
@@ -180,24 +223,39 @@ var apiControls = function () {
           type: 'dropdown',
           values: ['- New Auth Setting -','ServerDefault','SAML']
         }
-      ]}
+      ], helpLink: 'Update_User'}
     };
     $('#input').append("<form onsubmit='return false;' id='apiControlForm'><div class='form-group funcForm'>\
                         <select id='listItems' class='form-control'></select>\
-                        </div><button type='submit' id='listBtn' class='btn btn-primary btn-sm'>Run</button>");
+                        </div><button type='submit' id='listBtn' class='btn btn-primary btn-sm'>Run</button>\
+                        <button type='submit' id='undoBtn' class='btn btn-info btn-sm'>Undo</button>\
+                        <button type='submit' id='endpointHelp' class='btn btn-secondary btn-sm'><i class='fa fa-question-circle' aria-hidden='true'></i></button></form>");
     var listSelect = $('#listItems');
     $.each(listFunctions, function(val, opt) {
       var label = opt.label;
       var funcVer = opt.version;
       if(apiVersion>=funcVer) {
         listSelect.append(
-            $('<option></option>').val(val).html(label)
+            $('<option undoFunction="'+((opt.undoFunction) ? opt.undoFunction : "")+'" undoVersion="'+((opt.undoVersion) ? opt.undoVersion : "")+'" helpLink="'+((opt.helpLink) ? opt.helpLink : "")+'"></option>').val(val).html(label)
         );
       }
     });
 
+    var newVarsRow = function(html) {
+      $('.funcForm').append(html);
+      $('#newRow'+formRows).click( function () {
+        func[$('#listItems').val()](false);
+        $('#newRow'+formRows).hide();
+        var nextRow = formRows+1;
+        html = html.replace('newRow'+formRows,'newRow'+nextRow);
+        formRows++;
+        newVarsRow(html);
+      });
+    }
+
     listSelect.change(function() {
       $('.funcForm .dynamic').remove();
+      $('.funcForm form').remove();
       var opt = listFunctions[$('#listItems').val()];
       var formItems = opt.formItems;
       $.each(formItems, function(i, val) {
@@ -215,40 +273,54 @@ var apiControls = function () {
               );
             });
             break;
+          case 'multiple':
+            var html = "<form onsubmit='return false;'><div class='row multiple'>";
+            $.each(val.items, function(j, subVal) {
+              switch (subVal.type) {
+                case 'text':
+                  html += '<div class="col-xs-3"><label class="sr-only dynamic" for="'+subVal.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+subVal.label+'" placeholder="'+subVal.label+'"></input></div>';
+                  break;
+                case 'dropdown':
+                  html += '<div class="col-xs-3"><select class="form-control dynamic" id="'+subVal.label+'"></select></div>';
+                  var dynDrop = $('#' + val.label);
+                  var dropItems = val.values;
+                  $.each(dropItems, function(k, drop) {
+                    dynDrop.append(
+                        $('<option></option>').val(drop).html(drop)
+                    );
+                  });
+                  break;
+              }
+            });
+            html+='<div class="col-xs-1"><button type="submit" id="newRow'+formRows+'" class="btn btn-info form-control">+</button></div></div></form>'
+            newVarsRow(html);
         }
       });
       func[$('#listItems').val()](false);
       writeCode(selectedLang,method,url,headers,body);
-      $('.funcForm .dynamic').blur(function( event ) {
+      /*$('.funcForm .dynamic').blur(function( event ) {
         func[$('#listItems').val()](false);
-      });
+      });*/
+      $('#listBtn').show();
+      $('#undoBtn').hide();
+      if (opt.undoFunction && opt.undoVersion <= apiVersion) {
+        $('#undoBtn').show();
+      };
+      $('#endpointHelp').show();
     });
-
+    $('#listBtn').hide();
+    $('#undoBtn').hide();
+    $('#endpointHelp').hide();
     $('#listBtn').click(function() {
       func[$('#listItems').val()](true);
     });
-
-    //Set form for first selected value
-    var opt = listFunctions[$('#listItems').val()];
-    var formItems = opt.formItems;
-    $.each(formItems, function(i, val) {
-      switch (val.type) {
-        case 'text':
-          $('.funcForm').append('<label class="sr-only dynamic" for="'+val.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+val.label+'" placeholder="'+val.label+'"></input>');
-          break;
-        case 'dropdown':
-          $('.funcForm').append('<select class="form-control dynamic" id="'+val.label+'"></select>');
-          var dynDrop = $('#' + val.label);
-          var dropItems = val.values;
-          $.each(dropItems, function(i, val) {
-            dynDrop.append(
-                $('<option></option>').val(val).html(val)
-            );
-          });
-          break;
-      }
+    $('#undoBtn').click(function() {
+      func[$("#listItems option:selected").attr("undoFunction")](true);
     });
-
+    $('#endpointHelp').click(function() {
+      var win = window.open('https://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm#REST/rest_api_ref.htm#'+$("#listItems option:selected").attr("helpLink"), '_blank');
+      win.focus();
+    })
     $('.funcForm .dynamic').blur(function( event ) {
       func[$('#listItems').val()](false);
     });

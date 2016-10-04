@@ -2,7 +2,8 @@ var selectedLang = 'jsAjax',
     credsToken = siteid = contentUrl = userid = "",
     productVersion = 10.0,
     apiVersion = 2.3,
-    method = url = headers = body = undefined;
+    formRows = 1,
+    method = url = headers = body = undoVal = undefined;
 
 if (getCookie('apiVersion')) {
   apiVersion = getCookie('apiVersion');
@@ -82,17 +83,6 @@ func.apiSignin = function () {
   });
 }
 
-func.apiAddUsertoSite = function(run) {
-  method = 'POST',
-  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users',
-  headers = {
-    'X-Tableau-Auth' : credsToken
-  },
-  body = '<tsRequest>\n\t<user name="'+$('#user-name').val()+'"\n\t\tsiteRole="'+$('#site-role').val()+'" \n\t\tauthSetting="'+$('#auth-setting').val()+'" />\n\t</tsRequest>';
-  writeCode(selectedLang,method,url,headers,body);
-  if (run) { queryAPI('tsresponse.user') }
-}
-
 func.apiAddDatasourceFavorites = function(run) {
   method = 'PUT',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/favorites/'+$('#user-id').val(),
@@ -102,6 +92,83 @@ func.apiAddDatasourceFavorites = function(run) {
   body = '<tsRequest>\n<favorite label="'+$('#favorite-label').val()+'">\n<datasource id="'+$('#datasource-id').val()+'" />\n</favorite>\n</tsRequest>';
   writeCode(selectedLang,method,url,headers,body);
   if (run) { queryAPI('tsresponse.favorites.favorite') }
+}
+
+func.apiAddTagstoWorkbook = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t<tags>\n';
+  $.each($('.row.multiple input'), function(i, row) {
+    if($(row).val()) {
+      body+= '\t\t<tag label="' + $(row).val() + '" />\n'
+    }
+  });
+  body += '\t</tags>\n  </tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.tags.tag', "form") }
+}
+
+func.apiAddUsertoSite = function(run) {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<user name="'+$('#user-name').val()+'"\n\t\tsiteRole="'+$('#site-role').val()+'" \n\t\tauthSetting="'+$('#auth-setting').val()+'" />\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.user', 'user.id') }
+}
+
+func.apiCreateGroup = function(run) {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/groups',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<group name="'+$('#new-tableau-server-group-name').val()+'"/>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.group', 'group.id') }
+}
+
+func.apiDeleteGroup = function(run) {
+  method = 'DELETE';
+  if ($('#group-id').val()) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/groups/'+$('#group-id').val();
+  } else {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/groups/'+undoVal;
+    undoVal = undefined;
+  }
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('none') }
+}
+
+func.apiDeleteTagfromWorkbook = function(run) {
+  method = 'DELETE';
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  if (undoVal != "form") {
+    $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags/'+$('#tag-name').val();
+    writeCode(selectedLang,method,url,headers,body);
+    if (run) { queryAPI('none') }
+  } else {
+    $.each($('.row.multiple input'), function(i, row) {
+      if($(row).val()) {
+        url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags/'+$(row).val();
+        writeCode(selectedLang,method,url,headers,body);
+        if (run) { queryAPI('none'), 'form' }
+      }
+    });
+    undoVal = undefined;
+  }
 }
 
 func.apiGetUsersonSite = function(run) {
@@ -269,6 +336,22 @@ func.apiQueryWorkbooksforUser = function(run) {
   if (run) { queryAPI('tsresponse.workbooks.workbook') }
 }
 
+func.apiRemoveUserfromSite = function(run) {
+  method = 'DELETE';
+  if ($('#user-id').val()) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users/'+$('#user-id').val();
+  } else {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users/'+ undoVal;
+    undoVal = undefined;
+  }
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('none') }
+}
+
 func.apiSignOut = function() {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signout',
@@ -277,7 +360,7 @@ func.apiSignOut = function() {
   },
   body = undefined;
   writeCode(selectedLang,method,url,headers,body);
-  queryAPI('authinfo');
+  queryAPI('none');
 }
 
 func.apiUpdateUser = function(run) {
@@ -297,7 +380,7 @@ func.apiUpdateUser = function(run) {
   if (run) { queryAPI('tsresponse.user') }
 }
 
-var queryAPI = function (xmlPath) {
+var queryAPI = function (xmlPath, undoVar) {
   var callVars = {
     "url": url,
     "method": method,
@@ -316,6 +399,18 @@ var queryAPI = function (xmlPath) {
     writeResponse('xml',response.raw);
     $('#resp-table').html(response.html);
     $('#resp-csv').html(response.csv);
+    if (undoVar) {
+      if(undoVar != "form") {
+        var attrs = undoVar.split('.');
+        if (attrs.length == 2) {
+          undoVal = $(response.raw).find(attrs[0]).attr(attrs[1]);
+        } else {
+          undoVal = $(response.raw).find(attrs[0]);
+        }
+      } else {
+        undoVal = "form";
+      }
+    }
   }).fail(function (jqXHR, textStatus) {
     writeResponse('xml',jqXHR.responseXML);
   });
