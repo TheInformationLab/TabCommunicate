@@ -53,6 +53,80 @@ app.use('/api/q', function(req, res) {
   });
 });
 
+app.use('/api/csv', function(req, res) {
+  getAllData(req, '', 0, function(csv) {
+    var fs = require('fs');
+    var mktemp = require('mktemp');
+    var path = require('path');
+    mktemp.createFile('./files/TabCommunicate-XXXXXXX.csv', function(err, tempFile) {
+      if (err) throw err;
+      fs.writeFile(tempFile, csv, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        res.send(tempFile);
+        setTimeout(function () {
+          fs.unlinkSync(tempFile);
+        }, 5000);
+        //fs.unlinkSync(tempFile);
+    });
+    });
+  });
+});
+
+var getAllData = function (req, data, page, callback) {
+  var options = req.body;
+  var dataType = options.respLang;
+  var node = options.node;
+  var noResponse = false;
+  if (node == "authinfo") {
+    options.qs = { format: 'xml' };
+  } else if (node == "none") {
+    noResponse = true;
+  }
+  delete options.respLang;
+  delete options.node;
+  if (page > 1) {
+    options.url = options.url + '?pageNumber=' + page;
+;  }
+  request(options, function (error, response, body) {
+    if (error) {
+      var obj = {};
+      obj.raw = error;
+      obj.html = error;
+      obj.csv = error;
+      res.send(obj);
+    } else {
+      if (noResponse) {
+        var obj = {};
+        obj.raw = "Command Executed. Tableau Server doesn't return a response body to this command.";
+        obj.html = "Command Executed. Tableau Server doesn't return a response body to this command.";
+        obj.csv = "Command Executed. Tableau Server doesn't return a response body to this command.";
+        res.send(obj);
+      } else {
+        console.log(node);
+        parseOutput(dataType, body, node, function(obj) {
+          var csv = obj.csv;
+          csv = csv.replace(/<br\/>/g,'\n');
+          if (page > 1) {
+            csv = csv.replace(/^.*\n/g,'');
+          }
+          data += csv;
+          if(obj.more) {
+            options.respLang = dataType;
+            options.node = node;
+            req.body = options;
+            console.log(req);
+            getAllData(req, data, obj.nextPage, callback);
+          } else {
+            callback(data);
+          }
+        });
+      }
+    }
+  });
+}
+
 app.listen(port, function() {
   console.log("Listening on https://127.0.0.1:3000");
 });
@@ -68,9 +142,21 @@ var js2table = require('json-to-table');
 var parseOutput = function(dataType, body, node, callback) {
   if (dataType == 'xml') {
     var xmlText = body;
-    var result = xmlParser.parser( xmlText );
-    result = resolveJSON(result, node);
+    var jsonResult = xmlParser.parser( xmlText );
+    result = resolveJSON(jsonResult, node);
+    pagination = resolveJSON(jsonResult, 'tsresponse.pagination');
+    if(pagination) {
+      if ((pagination.pagenumber * pagination.pagesize) >=  pagination.totalavailable) {
+        var more = false;
+        var nextPage = 0;
+      } else {
+        var more = true;
+        var nextPage = pagination.pagenumber + 1;
+      }
+    }
     jsonArraytoHTMLCSV(body,js2table(result), function(obj) {
+      obj.more = more;
+      obj.nextPage = nextPage;
       callback(obj);
     });
   } else {

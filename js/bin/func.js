@@ -3,7 +3,7 @@ var selectedLang = 'jsAjax',
     productVersion = 10.0,
     apiVersion = 2.3,
     formRows = 1,
-    method = url = headers = body = undoVal = undefined;
+    method = url = headers = body = response = undoVal = undefined;
 
 if (getCookie('apiVersion')) {
   apiVersion = getCookie('apiVersion');
@@ -42,7 +42,7 @@ func.getServerSettingsUnauthenticated = function() {
     { apiVersion = 2.0 }
     refreshVariables();
     $('#resp-table').html(response.html);
-    $('#resp-csv').html(response.csv);
+    $('#resp-csv #text').html(response.csv);
   }).fail(function (jqXHR, textStatus) {
     writeResponse('xml',jqXHR.responseXML);
   });
@@ -52,7 +52,7 @@ func.apiSignin = function () {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signin',
   headers = undefined,
-  body = "<tsRequest>\n\t\t<credentials name='"+$('#username').val()+"' password='"+$('#password').val()+"'>\n\t\t\t<site contentUrl='"+$('#site').val()+"'/>\n\t\t</credentials>\n\t</tsRequest>";
+  body = "<tsRequest>\\\n\t\t<credentials name='"+$('#username').val()+"' password='"+$('#password').val()+"'>\\\n\t\t\t<site contentUrl='"+$('#site').val()+"'/>\\\n\t\t</credentials>\\\n\t</tsRequest>";
   var callVars = {
     "url": url,
     "method": method,
@@ -77,7 +77,7 @@ func.apiSignin = function () {
     refreshVariables();
     apiControls();
     $('#resp-table').html(response.html);
-    $('#resp-csv').html(response.csv);
+    $('#resp-csv #text').html(response.csv);
   }).fail(function (jqXHR, textStatus) {
     writeResponse('json',textStatus);
   });
@@ -398,7 +398,7 @@ var queryAPI = function (xmlPath, undoVar) {
   $.ajax(settings).done(function (response) {
     writeResponse('xml',response.raw);
     $('#resp-table').html(response.html);
-    $('#resp-csv').html(response.csv);
+    $('#resp-csv #text').html(response.csv);
     if (undoVar) {
       if(undoVar != "form") {
         var attrs = undoVar.split('.');
@@ -431,6 +431,10 @@ var writeCode = function(language, method, url, headers, body) {
     $('#code').html('<pre><code class="PHP" id="scriptOutput"></code></pre>');
       output = lib.phpHttpRequest(method, url, headers, body);
       break;
+    case 'phpcURL':
+    $('#code').html('<pre><code class="PHP" id="scriptOutput"></code></pre>');
+      output = lib.phpcURL(method, url, headers, body);
+      break;
   }
   $('#code #scriptOutput').text(output);
   $('pre code').each(function(i, block) {
@@ -455,39 +459,6 @@ var writeResponse = function(dataType, body) {
   });
 }
 
-var writeTable = function(dataType, body, node) {
-  var xmlParser = require('simple-xml2json');
-  var js2table = require('json-to-table');
-  if (dataType == 'xml') {
-    var xmlText = new XMLSerializer().serializeToString(body);
-    var result = xmlParser.parser( xmlText );
-    result = resolveJSON(result, node);
-    jsonArraytoHTML(js2table(result), function(htmlStr) {
-      $('#resp-table').html(htmlStr);
-    });
-  } else {
-    jsonArraytoHTML(body, function(htmlStr) {
-      $('#resp-table').html(htmlStr);
-    });
-  }
-}
-
-var writeCSV = function(dataType, body, node) {
-  var xmlParser = require('simple-xml2json');
-  var js2table = require('json-to-table');
-  if (dataType == 'xml') {
-    var xmlText = new XMLSerializer().serializeToString(body);
-    var result = xmlParser.parser( xmlText );
-    result = resolveJSON(result, node);
-    jsonArraytoCSV(js2table(result), function(csvStr) {
-      $('#resp-csv').html(csvStr);
-    });
-  } else {
-    jsonArraytoCSV(body, function(csvStr) {
-      $('#resp-csv').html(csvStr);
-    });
-  }
-}
 
 var refreshVariables = function () {
   setCookie('apiVersion', apiVersion);

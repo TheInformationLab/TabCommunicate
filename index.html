@@ -1,11 +1,14 @@
 <html>
   <head>
     <title>TabCommunicate by Craig Bloodworth | The Information Lab</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link href="css/shCoreDefault.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="css/atom-one-light.min.css">
+    <script src="js/lib/highlight.min.js"></script>
     <link rel="stylesheet" href="/css/app.css">
   </head>
   <body>
@@ -20,6 +23,11 @@
       <div class="card-block">
         <div id="codeLang"></div>
         <div id="code"></div>
+        <div id="copyCode">
+          <button class="copyBtn" data-clipboard-target="#scriptOutput">
+            <i class="fa fa-clipboard" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
     <div id="outputDiv" class="card">
@@ -38,7 +46,15 @@
 
       </div>
       <div id="resp-csv" class="card-block tab-content">
-
+        <div id="exportCsv">
+          <button class="btn btn-outline-info exportBtn" id="csvExportBtn">
+            <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export to CSV
+          </button>
+          <button class="btn btn-outline-info exportBtn" id="tdeExportBtn" style="display: none;">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i> Export to TDE
+          </button>
+        </div>
+        <div id="text"></div>
       </div>
       <div id="resp-variables" class="card-block tab-content">
 
@@ -47,10 +63,32 @@
         <textarea type="text" class="scratch-pad"></textarea>
       </div>
     </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Welcome to TabCommunicate</h4>
+        </div>
+        <div class="modal-body">
+          <p>TabCommunicate was created for one simple purpose...to encourage everyone to code, to create awesome apps & scripts to work with the Tableau Server REST API.</p>
+          <h2>Getting Started</h2>
+          You'll need a Tableau Server to make use of this tool. Any version will do.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </body>
   <script src="js/lib/jquery.min.js"></script>
   <script src="js/lib/tether.min.js"></script>
   <script src="js/lib/bootstrap.min.js"></script>
+  <script src="js/lib/clipboard.min.js"></script>
   <script src="js/bin/library.js"></script>
   <script src="js/bin/func.js"></script>
   <script src="js/bin/control.js"></script>

@@ -56,12 +56,16 @@ var init = function() {
   $('#codeLang').append('<div class="btn-group" role="group" aria-label="Select Code Language">\
       <button type="button" class="btn btn-primary btn-sm" data-lang="jsAjax">JS AJAX</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="nodeRequest">NodeJS Request</button>\
+      <button type="button" class="btn btn-secondary btn-sm" data-lang="phpcURL">PHP cURL</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpHttpRequest">PHP HttpRequest</button>\
     </div>');
 
   if (credsToken.length > 0) {
     apiControls();
   }
+
+  $('#exportCsv').hide();
+
 }
 
 var apiControls = function () {
@@ -141,20 +145,20 @@ var apiControls = function () {
           label : 'datasource-id',
           type : 'text'
         }
-      ], },
+      ], csvNode: 'tsresponse.datasource'},
       apiQueryDatasourceConnections : {label : 'Query Datasource Connections', version : 2.3, formItems : [
         {
           label : 'datasource-id',
           type : 'text'
         }
-      ], helpLink: 'Query_Datasource_Connections'},
+      ], helpLink: 'Query_Datasource_Connections', csvNode: 'tsresponse.connections.connection'},
       apiQueryDatasourcePermissions : {label : 'Query Datasource Permissions', version : 2.0, formItems : [
         {
           label : 'datasource-id',
           type : 'text'
         }
-      ], helpLink: 'Query_Datasource_Permissions'},
-      apiQueryDatasources : {label : 'Query Datasources', version : 1.0, formItems : [], helpLink: 'Query_Datasources'},
+      ], helpLink: 'Query_Datasource_Permissions', csvNode: 'tsresponse.permissions'},
+      apiQueryDatasources : {label : 'Query Datasources', version : 1.0, formItems : [], helpLink: 'Query_Datasources', csvNode: 'tsresponse.datasources.datasource'},
       apiQueryDefaultPermissions : {label : 'Query Default Permissions', version : 2.1, formItems : [
         {
           label : 'project-id',
@@ -165,31 +169,31 @@ var apiControls = function () {
           type : 'dropdown',
           values : ['datasources','workbooks']
         }
-      ], helpLink: 'Query_Datasource_Permissions'},
+      ], helpLink: 'Query_Datasource_Permissions', csvNode: 'tsresponse.permissions'},
       apiQueryExtractRefreshTasks : {label : 'Query Extract Refresh Tasks', version : 2.2, formItems : [
         {
           label : 'schedule-id',
           type : 'text'
         }
-      ], helpLink: 'Query_Extract_Refresh_Tasks'},
-      apiQueryGroups : {label : 'Query Groups', version : 2.0, formItems : [], helpLink: 'Query_Groups'},
+      ], helpLink: 'Query_Extract_Refresh_Tasks', csvNode: 'tsresponse.extracts.extract'},
+      apiQueryGroups : {label : 'Query Groups', version : 2.0, formItems : [], helpLink: 'Query_Groups', csvNode: 'tsresponse.groups.group'},
       apiQueryJob : {label : 'Query Job', version : 2.0, formItems : [
         {
           label : 'job-id',
           type : 'text'
         }
-      ], helpLink: 'Query_Job'},
-      apiQuerySchedules : {label : 'Query Schedules', version : 2.2, formItems : [], helpLink: 'Query_Schedules'},
-      apiQuerySites : {label : 'Query Sites', version : 1.0, formItems : [], helpLink: 'Query_Sites'},
-      apiQueryProjects : {label : 'Query Projects', version : 2.0, formItems : [], helpLink: 'Query_Projects'},
-      apiQueryViewsforSite : {label : 'Query Views for Site', version : 2.2, formItems : [], helpLink: 'Query_Views_for_Site'},
-      apiQueryWorkbooksforSite : {label : 'Query Workbooks for Site', version : 2.3, formItems : [], helpLink: 'Query_Workbooks_for_Site'},
+      ], helpLink: 'Query_Job', csvNode: 'tsresponse.job'},
+      apiQuerySchedules : {label : 'Query Schedules', version : 2.2, formItems : [], helpLink: 'Query_Schedules', csvNode: 'tsresponse.schedules.schedule'},
+      apiQuerySites : {label : 'Query Sites', version : 1.0, formItems : [], helpLink: 'Query_Sites', csvNode: 'tsresponse.sites.site'},
+      apiQueryProjects : {label : 'Query Projects', version : 2.0, formItems : [], helpLink: 'Query_Projects', csvNode: 'tsresponse.projects.project'},
+      apiQueryViewsforSite : {label : 'Query Views for Site', version : 2.2, formItems : [], helpLink: 'Query_Views_for_Site', csvNode: 'tsresponse.views.view'},
+      apiQueryWorkbooksforSite : {label : 'Query Workbooks for Site', version : 2.3, formItems : [], helpLink: 'Query_Workbooks_for_Site', csvNode: 'tsresponse.workbooks.workbook'},
       apiQueryWorkbooksforUser : {label : 'Query Workbooks for User', version : 1.0, formItems : [
         {
           label : 'user-id',
           type : 'text'
         }
-      ], helpLink: 'Query_Workbooks_for_User'},
+      ], helpLink: 'Query_Workbooks_for_User', csvNode: 'tsresponse.workbooks.workbook'},
       apiRemoveUserfromSite : {label : 'Remove User from Site', version : 1.0, formItems : [
         {
           label : 'user-id',
@@ -236,7 +240,7 @@ var apiControls = function () {
       var funcVer = opt.version;
       if(apiVersion>=funcVer) {
         listSelect.append(
-            $('<option undoFunction="'+((opt.undoFunction) ? opt.undoFunction : "")+'" undoVersion="'+((opt.undoVersion) ? opt.undoVersion : "")+'" helpLink="'+((opt.helpLink) ? opt.helpLink : "")+'"></option>').val(val).html(label)
+            $('<option undoFunction="'+((opt.undoFunction) ? opt.undoFunction : "")+'" undoVersion="'+((opt.undoVersion) ? opt.undoVersion : "")+'" helpLink="'+((opt.helpLink) ? opt.helpLink : "")+'" csvNode="'+((opt.csvNode) ? opt.csvNode : "")+'"></option>').val(val).html(label)
         );
       }
     });
@@ -307,6 +311,11 @@ var apiControls = function () {
         $('#undoBtn').show();
       };
       $('#endpointHelp').show();
+      if ($("#listItems option:selected").attr("csvNode")) {
+        $('#exportCsv').show();
+      } else {
+        $('#exportCsv').hide();
+      }
     });
     $('#listBtn').hide();
     $('#undoBtn').hide();
@@ -323,6 +332,26 @@ var apiControls = function () {
     })
     $('.funcForm .dynamic').blur(function( event ) {
       func[$('#listItems').val()](false);
+    });
+    $('#csvExportBtn').click(function() {
+      var callVars = {
+        "url": url,
+        "method": method,
+        "body": body,
+        "headers" : headers,
+        "respLang": "xml",
+        "node" : $("#listItems option:selected").attr("csvNode")
+      };
+      var settings = {
+        url : "/api/csv",
+        method : "POST",
+        data : callVars,
+        contentType : "application/x-www-form-urlencoded"
+      }
+      $.ajax(settings).done(function (response) {
+        var win = window.open(response, '_blank');
+        win.focus();
+      });
     });
   }
 }
@@ -350,6 +379,12 @@ $(document).ready(function(){
     $(this).removeClass('btn-secondary');
     selectedLang = $(this).attr('data-lang');
     writeCode(selectedLang,method,url,headers,body);
+  });
+
+  var clipboard = new Clipboard('.copyBtn');
+  $('#copyCode').hide();
+  $('#codeDiv').hover( function() {
+    $('#copyCode').fadeToggle("slow");
   });
 
 });

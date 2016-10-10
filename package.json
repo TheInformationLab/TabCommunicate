@@ -8,6 +8,7 @@
     "express": "^4.14.0",
     "json-to-table": "^2.1.5",
     "json2csv": "^3.4.1",
+    "mktemp": "^0.4.0",
     "node-syntaxhighlighter": "^0.8.1",
     "request": "^2.75.0",
     "simple-xml2json": "^1.2.3"

@@ -25,6 +25,25 @@
   overflow-y: auto;
 }
 
+#copyCode {
+  bottom: 20;
+  right: 0;
+  position: absolute;
+}
+
+#copyCode .copyBtn {
+  background: none;
+  color: rgba(49, 49, 49, 0.20);
+  border: none;
+}
+
+#copyCode .copyBtn:hover {
+  color: rgba(49, 49, 49, 0.60);
+}
+
+#copyCode .copyBtn i {
+  font-size: 16pt;
+}
 
 @media only screen and (max-width: 1055px) {
   [class*="col-"] {
@@ -113,4 +132,8 @@ pre {
 
 .funcForm form {
   margin-bottom: 0;
+}
+
+#exportCsv {
+  padding-bottom: 10px;
 }
