@@ -16,7 +16,8 @@ import locale
 import array
 import re
 import ConfigParser
-
+reload(sys)
+sys.setdefaultencoding('utf8')
 # Import Tableau module
 from tableausdk import *
 from tableausdk.Extract import *

@@ -66,7 +66,7 @@ app.use('/api/tde', function(req, res) {
         if (err) throw err;
         var headers = csv.match(/^.*/g);
         var headArr = headers[0].split(',');
-        var ini = '[' + tempFile + ']\n';
+        var ini = '[' + tempFile.replace('./files/','') + ']\n';
         ini += 'ColNameHeader=True\n';
         for (i=0;i<headArr.length;i++) {
           var colNo = i + 1;
