@@ -62,8 +62,9 @@ app.use('/api/tde', function(req, res) {
     var mktemp = require('mktemp');
     var path = require('path');
     mktemp.createFile('./files/TabCommunicate-XXXXXXX.ini', function(err, iniFile) {
-      var headers = csv.match('/^.*\n/g');
-      var headArr = headers.split(',');
+      console.log(csv);
+      var headers = csv.match(/^.*/g);
+      var headArr = headers[0].split(',');
       var ini = 'ColNameHeader=True\n';
       for (i=0;i<headArr.length;i++) {
         ini += 'col'+i+1+'=' + headArr[i] + '\n';
@@ -78,7 +79,7 @@ app.use('/api/tde', function(req, res) {
             if(err) {
                 return console.log(err);
             }
-            PythonShell.run('./files/csv2tde.py ' + tempFile + ' ' + iniFile, function (err) {
+            PythonShell.run('./files/csv2tde.py ' + tempFile.replace('./files/','') + ' ' + iniFile.replace('./files/',''), function (err) {
               if (err) throw err;
               res.send(tempFile.replace('.csv','.tde'));
               setTimeout(function () {
