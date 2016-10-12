@@ -10,6 +10,7 @@
     "json2csv": "^3.4.1",
     "mktemp": "^0.4.0",
     "node-syntaxhighlighter": "^0.8.1",
+    "python-shell": "^0.4.0",
     "request": "^2.75.0",
     "simple-xml2json": "^1.2.3"
   },

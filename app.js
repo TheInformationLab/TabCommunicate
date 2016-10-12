@@ -53,8 +53,51 @@ app.use('/api/q', function(req, res) {
   });
 });
 
+app.use('/api/tde', function(req, res) {
+  var PythonShell = require('python-shell');
+  getAllData(req, '', 0, function(csv) {
+    //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+    //res.send(response);
+    var fs = require('fs');
+    var mktemp = require('mktemp');
+    var path = require('path');
+    mktemp.createFile('./files/TabCommunicate-XXXXXXX.ini', function(err, iniFile) {
+      var headers = csv.match('/^.*\n/g');
+      var headArr = headers.split(',');
+      var ini = 'ColNameHeader=True\n';
+      for (i=0;i<headArr.length;i++) {
+        ini += 'col'+i+1+'=' + headArr[i] + '\n';
+      }
+      fs.writeFile(iniFile, ini, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        mktemp.createFile('./files/TabCommunicate-XXXXXXX.csv', function(err, tempFile) {
+          if (err) throw err;
+          fs.writeFile(tempFile, csv, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            PythonShell.run('./files/csv2tde.py ' + tempFile + ' ' + iniFile, function (err) {
+              if (err) throw err;
+              res.send(tempFile.replace('.csv','.tde'));
+              setTimeout(function () {
+                fs.unlinkSync(iniFile);
+                fs.unlinkSync(tempFile);
+                fs.unlinkSync(tempFile.replace('.csv','.tde'));
+              }, 5000);
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
 app.use('/api/csv', function(req, res) {
   getAllData(req, '', 0, function(csv) {
+    //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+    //res.send(response);
     var fs = require('fs');
     var mktemp = require('mktemp');
     var path = require('path');
@@ -68,8 +111,7 @@ app.use('/api/csv', function(req, res) {
         setTimeout(function () {
           fs.unlinkSync(tempFile);
         }, 5000);
-        //fs.unlinkSync(tempFile);
-    });
+      });
     });
   });
 });
@@ -116,7 +158,6 @@ var getAllData = function (req, data, page, callback) {
             options.respLang = dataType;
             options.node = node;
             req.body = options;
-            console.log(req);
             getAllData(req, data, obj.nextPage, callback);
           } else {
             callback(data);

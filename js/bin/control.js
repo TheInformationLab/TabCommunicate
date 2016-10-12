@@ -348,9 +348,33 @@ var apiControls = function () {
         data : callVars,
         contentType : "application/x-www-form-urlencoded"
       }
+      $('.fa.fa-file-excel-o').attr('class','fa fa-spinner fa-pulse fa-3x fa-fw');
       $.ajax(settings).done(function (response) {
-        var win = window.open(response, '_blank');
-        win.focus();
+        window.open(response, '_blank');
+        $('.fa.fa-spinner.fa-pulse.fa-3x.fa-fw').attr('class','fa fa-file-excel-o');
+        //window.location.href = response;
+      });
+    });
+    $('#tdeExportBtn').click(function() {
+      var callVars = {
+        "url": url,
+        "method": method,
+        "body": body,
+        "headers" : headers,
+        "respLang": "xml",
+        "node" : $("#listItems option:selected").attr("csvNode")
+      };
+      var settings = {
+        url : "/api/tde",
+        method : "POST",
+        data : callVars,
+        contentType : "application/x-www-form-urlencoded"
+      }
+      $('.fa.fa-file-text-o').attr('class','fa fa-spinner fa-pulse fa-3x fa-fw');
+      $.ajax(settings).done(function (response) {
+        window.open(response, '_blank');
+        $('.fa.fa-spinner.fa-pulse.fa-3x.fa-fw').attr('class','fa fa-file-text-o');
+        //window.location.href = response;
       });
     });
   }
