@@ -60,13 +60,12 @@ app.use('/api/tde', function(req, res) {
     //res.send(response);
     var fs = require('fs');
     var path = require('path');
-    if (err) throw err;
     var randStr = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
     var csvFile = 'TabCommunicate-' + randStr + '.csv';
     var iniFile = 'TabCommunicate-' + randStr + '.ini';
     var headers = csv.match(/^.*/g);
     var headArr = headers[0].split(',');
-    var ini = '[' + csvFile + ']\n';
+    var ini = '[/etc/tabcommunicate/files/' + csvFile + ']\n';
     ini += 'ColNameHeader=True\n';
     for (i=0;i<headArr.length;i++) {
       var colNo = i + 1;
@@ -84,7 +83,7 @@ app.use('/api/tde', function(req, res) {
         fs.chmodSync('./files/' + iniFile, '744');
         var options = {
           scriptPath: '/etc/tabcommunicate/files',
-          args: [csvFile, iniFile]
+          args: ['/etc/tabcommunicate/files/'+csvFile, '/etc/tabcommunicate/files/'+iniFile]
         };
         PythonShell.run('csv2tde.py', options, function (err) {
           if (err) throw err;
