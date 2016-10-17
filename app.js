@@ -69,16 +69,7 @@ app.use('/api/tde', function(req, res) {
     ini += 'ColNameHeader=True\n';
     for (i=0;i<headArr.length;i++) {
       var colNo = i + 1;
-      switch (headArr[i]) {
-        case 'createdat':
-          ini += 'col'+colNo+'=' + headArr[i] + ' DateTime\n';
-          break;
-        case 'updatedat':
-          ini += 'col'+colNo+'=' + headArr[i] + ' DateTime\n';
-          break;
-        default:
-          ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
-      }
+      ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
     }
     fs.writeFile('./files/' + iniFile, ini, function(err) {
       if(err) {
@@ -96,7 +87,7 @@ app.use('/api/tde', function(req, res) {
         };
         PythonShell.run('csv2tde.py', options, function (err) {
           if (err) throw err;
-          res.send('./files/' + csvFile.replace('.csv','.tde'));
+          res.send(csvFile.replace('.csv','.tde'));
           setTimeout(function () {
             fs.unlinkSync('./files/' + iniFile);
             fs.unlinkSync('./files/' + csvFile);
