@@ -87,7 +87,7 @@ app.use('/api/tde', function(req, res) {
         };
         PythonShell.run('csv2tde.py', options, function (err) {
           if (err) throw err;
-          res.send(csvFile.replace('.csv','.tde'));
+          res.send('./files/' + csvFile.replace('.csv','.tde'));
           setTimeout(function () {
             fs.unlinkSync('./files/' + iniFile);
             fs.unlinkSync('./files/' + csvFile);
