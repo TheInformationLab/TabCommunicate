@@ -59,43 +59,41 @@ app.use('/api/tde', function(req, res) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
     //res.send(response);
     var fs = require('fs');
-    var mktemp = require('mktemp');
     var path = require('path');
-    mktemp.createFile('./files/TabCommunicate-XXXXXXX.ini', function(err, iniFile) {
-      mktemp.createFile('./files/TabCommunicate-XXXXXXX.csv', function(err, tempFile) {
-        if (err) throw err;
-        var headers = csv.match(/^.*/g);
-        var headArr = headers[0].split(',');
-        var ini = '[' + tempFile.replace('./files/','') + ']\n';
-        ini += 'ColNameHeader=True\n';
-        for (i=0;i<headArr.length;i++) {
-          var colNo = i + 1;
-          ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
+    if (err) throw err;
+    var randStr = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    var csvFile = 'TabCommunicate-' + randStr + '.csv';
+    var iniFile = 'TabCommunicate-' + randStr + '.ini';
+    var headers = csv.match(/^.*/g);
+    var headArr = headers[0].split(',');
+    var ini = '[' + csvFile + ']\n';
+    ini += 'ColNameHeader=True\n';
+    for (i=0;i<headArr.length;i++) {
+      var colNo = i + 1;
+      ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
+    }
+    fs.writeFile('./files/' + iniFile, ini, function(err) {
+      if(err) {
+          console.log(err);
+      }
+      fs.writeFile('./files/' + csvFile, csv, function(err) {
+        if(err) {
+            console.log(err);
         }
-        fs.writeFile(iniFile, ini, function(err) {
-          if(err) {
-              return console.log(err);
-          }
-          fs.writeFile(tempFile, csv, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            fs.chmodSync(tempFile, '744');
-            fs.chmodSync(iniFile, '744');
-            var options = {
-              scriptPath: 'etc/tabcommunicate/files',
-              args: [tempFile, iniFile]
-            };
-            PythonShell.run('csv2tde.py', options, function (err) {
-              if (err) throw err;
-              res.send(tempFile.replace('.csv','.tde'));
-              setTimeout(function () {
-                fs.unlinkSync(iniFile);
-                fs.unlinkSync(tempFile);
-                fs.unlinkSync(tempFile.replace('.csv','.tde'));
-              }, 5000);
-            });
-          });
+        fs.chmodSync('./files/' + csvFile, '744');
+        fs.chmodSync('./files/' + iniFile, '744');
+        var options = {
+          scriptPath: '/etc/tabcommunicate/files',
+          args: [csvFile, iniFile]
+        };
+        PythonShell.run('csv2tde.py', options, function (err) {
+          if (err) throw err;
+          res.send(csvFile.replace('.csv','.tde'));
+          setTimeout(function () {
+            fs.unlinkSync('./files/' + iniFile);
+            fs.unlinkSync('./files/' + csvFile);
+            fs.unlinkSync('./files/' + csvFile.replace('.csv','.tde'));
+          }, 5000);
         });
       });
     });
