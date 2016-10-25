@@ -26,9 +26,9 @@
 }
 
 #copyCode {
-  bottom: 20;
-  right: 0;
-  position: absolute;
+  top: 590px;
+  right: 10px;
+  position: fixed;
 }
 
 #copyCode .copyBtn {
@@ -72,6 +72,9 @@
     bottom:auto;
     left:0;
     top: 900px;
+  }
+  #copyCode {
+    top: 860px;
   }
 }
 
