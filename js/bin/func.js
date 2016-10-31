@@ -27,7 +27,7 @@ func.getServerSettingsUnauthenticated = function() {
     "node" : "authinfo"
   };
   var settings = {
-    url : "/api/q",
+    url : $('#baseUrl').val() + "/api/q",
     method : "POST",
     data : callVars,
     contentType : "application/x-www-form-urlencoded"
@@ -63,7 +63,7 @@ func.apiSignin = function () {
   body = body.replace(/(?:password=')(.*)(?:'>)/,"password='****'>");
   writeCode(selectedLang,method,url,headers,body);
   var settings = {
-    url : "/api/q",
+    url : $('#baseUrl').val() + "/api/q",
     method : "POST",
     data : callVars,
     contentType : "application/x-www-form-urlencoded"
@@ -390,7 +390,7 @@ var queryAPI = function (xmlPath, undoVar) {
     "node" : xmlPath
   };
   var settings = {
-    url : "/api/q",
+    url : $('#baseUrl').val() + "/api/q",
     method : "POST",
     data : callVars,
     contentType : "application/x-www-form-urlencoded"

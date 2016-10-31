@@ -343,7 +343,7 @@ var apiControls = function () {
         "node" : $("#listItems option:selected").attr("csvNode")
       };
       var settings = {
-        url : "/api/csv",
+        url : $('#baseUrl').val() + "/api/csv",
         method : "POST",
         data : callVars,
         contentType : "application/x-www-form-urlencoded"
@@ -365,7 +365,7 @@ var apiControls = function () {
         "node" : $("#listItems option:selected").attr("csvNode")
       };
       var settings = {
-        url : "/api/tde",
+        url : $('#baseUrl').val() + "/api/tde",
         method : "POST",
         data : callVars,
         contentType : "application/x-www-form-urlencoded"
