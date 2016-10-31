@@ -1,3 +1,9 @@
+var pjson = require('../package.json');
+if(pjson["node-main"]) {
+  ('#baseUrl').val('https://tabcommunicate.theinformationlab.co.uk');
+} else {
+  ('#baseUrl').val('');
+}
 var init = function() {
   $('#input').append("<form onsubmit='return false;'>\
                         <div class='form-group'>\
