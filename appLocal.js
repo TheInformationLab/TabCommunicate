@@ -10,9 +10,8 @@ var options = {};
 
 app.use(cors());
 
-app.use( bodyParser.json({limit: '5000mb'}) );       // to support JSON-encoded bodies
-app.use( bodyParser.urlencoded({ extended:true, limit: '5000mb', parameterLimit: 10000000}));
-
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use( bodyParser.urlencoded({ extended:true}));
 
 app.use('/', express.static(__dirname + '/'));
 
@@ -117,56 +116,6 @@ app.use('/api/csv', function(req, res) {
       });
     });
   });
-});
-
-app.use('/remote/tde', function(req, res) {
-  var data = req.body;
-  var fs = require('fs');
-  var path = require('path');
-  parseOutput('json', data.content, data.node, function(obj) {
-    var csv = obj.csv;
-    csv = csv.replace(/<br\/>/g,'\n');
-    var PythonShell = require('python-shell');
-    var fs = require('fs');
-    var path = require('path');
-    var randStr = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    var csvFile = 'TabCommunicate-' + randStr + '.csv';
-    var iniFile = 'TabCommunicate-' + randStr + '.ini';
-    var headers = csv.match(/^.*/g);
-    var headArr = headers[0].split(',');
-    var ini = '[/etc/tabcommunicate/files/' + csvFile + ']\n';
-    ini += 'ColNameHeader=True\n';
-    for (i=0;i<headArr.length;i++) {
-      var colNo = i + 1;
-      ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
-    }
-    fs.writeFile('./files/' + iniFile, ini, function(err) {
-      if(err) {
-          console.log(err);
-      }
-      fs.writeFile('./files/' + csvFile, csv, function(err) {
-        if(err) {
-            console.log(err);
-        }
-        fs.chmodSync('./files/' + csvFile, '744');
-        fs.chmodSync('./files/' + iniFile, '744');
-        var options = {
-          scriptPath: '/etc/tabcommunicate/files',
-          args: ['/etc/tabcommunicate/files/'+csvFile, '/etc/tabcommunicate/files/'+iniFile]
-        };
-        PythonShell.run('csv2tde.py', options, function (err) {
-          if (err) throw err;
-          res.send('./files/' + csvFile.replace('.csv','.tde'));
-          setTimeout(function () {
-            fs.unlinkSync('./files/' + iniFile);
-            fs.unlinkSync('./files/' + csvFile);
-            fs.unlinkSync('./files/' + csvFile.replace('.csv','.tde'));
-          }, 5000);
-        });
-      });
-    });
-  });
-
 });
 
 var getAllData = function (req, data, page, callback) {

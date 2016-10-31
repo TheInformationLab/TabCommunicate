@@ -1,6 +1,6 @@
 {
   "name": "TabCommunicate",
-  "version": "0.0.1",
+  "version": "0.1",
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -15,6 +15,6 @@
     "simple-xml2json": "^1.2.3"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node appServer.js"
   }
 }
