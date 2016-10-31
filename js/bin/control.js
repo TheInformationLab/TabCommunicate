@@ -1,4 +1,4 @@
-var pjson = require('../package.json');
+var pjson = require('../../package.json');
 if(pjson["node-main"]) {
   ('#baseUrl').val('https://tabcommunicate.theinformationlab.co.uk');
 } else {
