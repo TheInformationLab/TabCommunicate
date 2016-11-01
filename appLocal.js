@@ -5,6 +5,8 @@ var http = require('http'),
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
+var ua = require('universal-analytics');
+var visitor = ua('UA-27427363-10', {https: true});
 
 var options = {};
 
@@ -13,7 +15,15 @@ app.use(cors());
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded({ extended:true}));
 
-app.use('/', express.static(__dirname + '/'));
+
+app.use('/', function(req, res, next) {
+  var fs = require('fs');
+  var clientInfo = {};
+  clientInfo.host = req.headers.host;
+  clientInfo.url = req.url;
+  visitor.pageview(clientInfo.url, clientInfo.host, "Public").send();
+  next();
+} , express.static(__dirname + '/'));
 
 app.use('/api/q', function(req, res) {
   var options = req.body;
@@ -27,6 +37,10 @@ app.use('/api/q', function(req, res) {
   }
   delete options.respLang;
   delete options.node;
+  var clientInfo = {};
+  clientInfo.host = req.headers.host;
+  clientInfo.url = req.url;
+  visitor.pageview(clientInfo.url, clientInfo.host, "Query API").send();
   request(options, function (error, response, body) {
     if (error) {
       var obj = {};
@@ -51,6 +65,10 @@ app.use('/api/q', function(req, res) {
 });
 
 app.use('/api/tde', function(req, res) {
+  var clientInfo = {};
+  clientInfo.host = req.headers.host;
+  clientInfo.url = req.url;
+  visitor.pageview(clientInfo.url, clientInfo.host, "TDE API").send();
   var PythonShell = require('python-shell');
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -97,6 +115,10 @@ app.use('/api/tde', function(req, res) {
 });
 
 app.use('/api/csv', function(req, res) {
+  var clientInfo = {};
+  clientInfo.host = req.headers.host;
+  clientInfo.url = req.url;
+  visitor.pageview(clientInfo.url, clientInfo.host, "CSV API").send();
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
     //res.send(response);

@@ -1,8 +1,8 @@
-var pjson = require('../../package.json');
-if(pjson["node-main"]) {
-  ('#baseUrl').val('https://tabcommunicate.theinformationlab.co.uk');
+var agent = navigator.userAgent;
+if(agent.includes("TabCommunicate")) {
+        $('#baseUrl').val('http://127.0.0.1:3000');
 } else {
-  ('#baseUrl').val('');
+        $('#baseUrl').val('');
 }
 var init = function() {
   $('#input').append("<form onsubmit='return false;'>\
