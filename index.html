@@ -40,6 +40,7 @@
           <li class="nav-item"><a href="#" class="nav-link" data-tab="resp-variables">Variables</a></li>
           <li class="nav-item"><a href="#" class="nav-link" data-tab="scratch-pad">Scratch Pad</a></li>
         </ul>
+        <div class="pull-xs-right" id="help"><i class='fa fa-question-circle' aria-hidden='true'></i></div>
       </div>
       <div id="response" class="card-block tab-content current">
       </div>
@@ -74,13 +75,61 @@
           <h4 class="modal-title" id="myModalLabel">Welcome to TabCommunicate</h4>
         </div>
         <div class="modal-body">
-          <p>TabCommunicate was created for one simple purpose...to encourage everyone to code, to create awesome apps & scripts to work with the Tableau Server REST API.</p>
+          <p>TabCommunicate was created for one simple purpose...to encourage everyone to code, to create awesome apps & scripts to work with the Tableau Server's REST API.</p>
+          <h2>About</h2>
+          <p>Created by <a href="https://www.twitter.com/craigbloodworth" target="_blank">Craig Bloodworth</a></p>
+          <p><a href="http://www.theinformationlab.co.uk" target="_blank"><img src="https://cdn1.theinformationlab.co.uk/wp-content/uploads/2016/06/08134557/info_Lab-Alteryx-PotY-2016.png"/></a></p>
+          <p>TabCommunicate is provided free of charge as a tool to benefit the Tableau community, no support is provided for its use other than associated online resources. If you wish to provide feedback, feature requests, or just to say a big "THANKS!" please email <a href="mailto:tabcommunicate@theinformationlab.co.uk">tabcommunicate@theinformationlab.co.uk</a></p>
+          <h3>Newsletter</h3>
+          <p>Want to keep up with the latest info from The Information Lab, including new dev projects and TabCommunicate news? Register for our newsletter:</p>
+          <!-- Begin MailChimp Signup Form -->
+          <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+          <style type="text/css">
+          	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+          	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+          	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+          </style>
+          <div id="mc_embed_signup">
+          <form action="//theinformationlab.us2.list-manage.com/subscribe/post?u=8954cfd70761b8c7fd5d8b528&amp;id=fc1dab699f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+              <div id="mc_embed_signup_scroll">
+
+          	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8954cfd70761b8c7fd5d8b528_fc1dab699f" tabindex="-1" value=""></div>
+              <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+              </div>
+          </form>
+          </div>
+
+          <!--End mc_embed_signup-->
           <h2>Getting Started</h2>
-          You'll need a Tableau Server to make use of this tool. Any version will do.
+          <p>You'll need a Tableau Server to make use of this tool. Any version will do, TabCommunicate will modify itself depending on the server you connect it to.</p>
+          <p>There's 3 main areas to the interface...Controls, Code & Output.</p>
+          <h3>Controls</h3>
+            This is where you'll do most of your work. There's four inputs to start with:<br/>
+            <div class="container" style="padding-top:10px;">
+              <div class="row flex-items-xs-top">
+                <div class="col-xs-2"><b>Server Url</b></div><div class="col-xs-10">Paste the URL of your Tableau Server (e.g. https://dub01.online.tableau.com)</div>
+              </div>
+              <div class="row flex-items-xs-top">
+                <div class="col-xs-2"><b>Site ID</b></div><div class="col-xs-10">The content URL of your site, not the site name (once logged into your site you can see it in the URL e.g. https://dub01.online.tableau.com/#/site/[Site ID is Here].)</div>
+              </div>
+              <div class="row flex-items-xs-top">
+                <div class="col-xs-2"><b>Username</b></div><div class="col-xs-10">Your Tableau Server username. If your server uses SAML authorisation this is your username as configured on the Tableau Server, not the SAML IdP.</div>
+              </div>
+              <div class="row flex-items-xs-top">
+                <div class="col-xs-2"><b>Password</b></div><div class="col-xs-10">Your Tableau Server password. Again if your server uses SAML authorisation this is your password as configured on the Tableau Server, not the SAML IdP.</div>
+              </div>
+            </div>
+          <h3>Code</h3>
+          <p>As you make changes and selections in the controls pane watch this pane for some pseudocode output of what you're doing. Use the buttons at the top to switch between code languages depending on what suits your app/script.</p>
+          <p>Also look out for the <i class="fa fa-clipboard" aria-hidden="true"></i> button in the bottom right to quickly copy the code into your clipboard.</p>
+          <h3>Output</h3>
+          <p>The bottom half of the screen is where responses from Tableau Server are displayed. Don't like the look of XML? Hit the Table tab to see a nicely structured, readable output.</p>
+          <p>Pro Tip! You can export some query outputs using the 'Export to CSV/TDE' buttons at the top of the Data tab. Hitting one of these sends the data in the output screen back to TabCommunicate to be converted into either a CSV or TDE for local analysis. <i>Warning! Exported data will exist on the TabCommunicate server for a period of 5 seconds at which point it will be deleted. Although the filename is randomly generated, the data is publically accessible during this time and should the delete command fail will exist on the server after these 5 seconds have elapsed.</i></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>

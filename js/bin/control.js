@@ -38,26 +38,52 @@ var init = function() {
     func.apiSignOut();
     $('#apiControlForm').remove();
   });
-  $('#serverUrl').blur(function () {
-    setCookie('serverUrl',$('#serverUrl').val());
-    func.getServerSettingsUnauthenticated();
-  });
-  $('#site').blur(function () {
-    setCookie('site',$('#site').val());
-  });
-  $('#username').blur(function () {
-    setCookie('username',$('#username').val());
-  });
+  if ($('#baseUrl').val() == "") {
+    $('#serverUrl').blur(function () {
+      setCookie('serverUrl',$('#serverUrl').val());
+      func.getServerSettingsUnauthenticated();
+    });
+    $('#site').blur(function () {
+      setCookie('site',$('#site').val());
+    });
+    $('#username').blur(function () {
+      setCookie('username',$('#username').val());
+    });
+    if (getCookie('serverUrl')) {
+      $('#serverUrl').val(getCookie('serverUrl'));
+    } else {
+      $('#myModal').modal();
+    }
+    if (getCookie('site')) {
+      $('#site').val(getCookie('site'));
+    }
+    if (getCookie('username')) {
+      $('#username').val(getCookie('username'));
+    }
+  } else {
+    $('#serverUrl').blur(function () {
+      localStorage.serverUrl = $('#serverUrl').val();
+      func.getServerSettingsUnauthenticated();
+    });
+    $('#site').blur(function () {
+      localStorage.site = $('#site').val();
+    });
+    $('#username').blur(function () {
+      localStorage.username = $('#username').val();
+    });
+    if (localStorage.serverUrl) {
+      $('#serverUrl').val(localStorage.serverUrl);
+    } else {
+      $('#myModal').modal();
+    }
+    if (localStorage.site) {
+      $('#site').val(localStorage.site);
+    }
+    if (localStorage.username ) {
+      $('#username').val(localStorage.username );
+    }
+  }
 
-  if (getCookie('serverUrl')) {
-    $('#serverUrl').val(getCookie('serverUrl'));
-  }
-  if (getCookie('site')) {
-    $('#site').val(getCookie('site'));
-  }
-  if (getCookie('username')) {
-    $('#username').val(getCookie('username'));
-  }
 
   $('#codeLang').append('<div class="btn-group" role="group" aria-label="Select Code Language">\
       <button type="button" class="btn btn-primary btn-sm" data-lang="jsAjax">JS AJAX</button>\
@@ -71,6 +97,10 @@ var init = function() {
   }
 
   $('#exportCsv').hide();
+
+  $('#help').click( function() {
+    $('#myModal').modal();
+  });
 
 }
 

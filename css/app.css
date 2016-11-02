@@ -49,11 +49,17 @@
   [class*="col-"] {
     width: 100%;
   }
+  body {
+    overflow-y: scroll;
+  }
 }
 
 @media only screen and (max-width: 756px) {
   [class*="col-"] {
     width: 100%;
+  }
+  body {
+    overflow-y: scroll;
   }
   #inputDiv {
     width: 100%;
@@ -143,4 +149,26 @@ pre {
 
 .fa-spinner {
   font-size: 14pt;
+}
+
+.modal-content {
+  font-size: 13px;
+}
+
+.modal-content h2 {
+  font-size: 1.2rem;
+}
+
+.modal-content h3 {
+  font-size: 1rem;
+}
+
+#help {
+  font-size: 40px;
+  color: rgba(2, 117, 216, 0.4);
+  cursor: pointer;
+}
+
+#help:hover {
+  color: rgba(2, 117, 216, 0.8);
 }

@@ -5,6 +5,9 @@ var http = require('http'),
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
+
+app.set('trust proxy', 'loopback, linklocal, 172.30.52.0/24, 172.30.51.0/24');
+
 var ua = require('universal-analytics');
 var visitor = ua('UA-27427363-10', {https: true});
 
@@ -18,7 +21,7 @@ app.use( bodyParser.urlencoded({ extended:true, limit: '5000mb', parameterLimit:
 
 app.use('/', function(req, res, next) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.remoteAddress = req.connection.remoteAddress;
@@ -26,7 +29,7 @@ app.use('/', function(req, res, next) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   visitor.pageview(clientInfo.url, clientInfo.host, "Public").send();
   next();
 } , express.static(__dirname + '/'));
@@ -44,7 +47,7 @@ app.use('/api/q', function(req, res) {
   delete options.respLang;
   delete options.node;
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.remoteAddress = req.connection.remoteAddress;
@@ -52,7 +55,7 @@ app.use('/api/q', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   visitor.pageview(clientInfo.url, clientInfo.host, "Query API").send();
   request(options, function (error, response, body) {
     if (error) {
@@ -79,7 +82,7 @@ app.use('/api/q', function(req, res) {
 
 app.use('/api/tde', function(req, res) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.remoteAddress = req.connection.remoteAddress;
@@ -87,7 +90,7 @@ app.use('/api/tde', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   visitor.pageview(clientInfo.url, clientInfo.host, "TDE API").send();
   var PythonShell = require('python-shell');
   getAllData(req, '', 0, function(csv) {
@@ -136,7 +139,7 @@ app.use('/api/tde', function(req, res) {
 
 app.use('/api/csv', function(req, res) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.remoteAddress = req.connection.remoteAddress;
@@ -144,7 +147,7 @@ app.use('/api/csv', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   visitor.pageview(clientInfo.url, clientInfo.host, "CSV API").send();
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -169,7 +172,7 @@ app.use('/api/csv', function(req, res) {
 
 app.use('/remote/tde', function(req, res) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.remoteAddress = req.connection.remoteAddress;
@@ -177,7 +180,7 @@ app.use('/remote/tde', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   visitor.pageview(clientInfo.url, clientInfo.host, "TDE Remote").send();
   var data = req.body;
   var fs = require('fs');
@@ -281,7 +284,7 @@ var getAllData = function (req, data, page, callback) {
 }
 
 app.listen(port, function() {
-  console.log("Listening on https://127.0.0.1:3000");
+  console.log("Listening on http://127.0.0.1:3000");
 });
 
 http.createServer(function (req, res) {
