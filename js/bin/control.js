@@ -114,7 +114,12 @@ var init = function() {
 }
 
 var onStorage = function(data) {
-  console.log(data);
+  console.log(data.StorageEvent);
+  console.log(data.StorageEvent.key);
+  console.log(data.StorageEvent.newValue);
+  if (data.key == "download" && data.newValue == "true") {
+    $('#updateModal').modal('show');
+  }
 }
 
 var apiControls = function () {
