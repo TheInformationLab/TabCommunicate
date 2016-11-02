@@ -65,7 +65,7 @@
         <textarea type="text" class="scratch-pad"></textarea>
       </div>
     </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="introModal" tabindex="-1" role="dialog" aria-labelledby="introModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -130,6 +130,27 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">TabCommunicate Update Available</h4>
+        </div>
+        <div class="modal-body">
+          <p>While we try and automate updates as much as possible, sometimes you just need to download the latest version. This is one of those times!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="downloadUpdate" data-dismiss="modal">Download Now</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Next Time</button>
         </div>
       </div>
     </div>

@@ -52,7 +52,7 @@ var init = function() {
     if (getCookie('serverUrl')) {
       $('#serverUrl').val(getCookie('serverUrl'));
     } else {
-      $('#myModal').modal();
+      $('#introModal').modal();
     }
     if (getCookie('site')) {
       $('#site').val(getCookie('site'));
@@ -74,7 +74,7 @@ var init = function() {
     if (localStorage.serverUrl) {
       $('#serverUrl').val(localStorage.serverUrl);
     } else {
-      $('#myModal').modal();
+      $('#introModal').modal();
     }
     if (localStorage.site) {
       $('#site').val(localStorage.site);
@@ -97,11 +97,24 @@ var init = function() {
   }
 
   $('#exportCsv').hide();
-
   $('#help').click( function() {
-    $('#myModal').modal();
+    $('#introModal').modal();
   });
+  $('#downloadUpdate').click( function() {
+    var win = window.open('https://tabcommunicate.theinformationlab.co.uk/download', '_blank');
+    $('#updateModal').modal('hide');
+    win.focus();
+  });
+  if (window.addEventListener) {
+    window.addEventListener("storage", onStorage, false);
+  } else {
+    window.attachEvent("onstorage", onStorage);
+  };
 
+}
+
+var onStorage = function(data) {
+  console.log(data);
 }
 
 var apiControls = function () {
