@@ -1,5 +1,9 @@
 [
   {
+    "version" : 0.2,
+    "updatedFiles" : ["index.html"]
+  },
+  {
     "version" : 0.11,
     "updatedFiles" : ["appLocal.js","js/bin/control.js"]
   }
