@@ -5,7 +5,9 @@ var http = require('http'),
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
+
 var ua = require('universal-analytics');
+app.use(ua.middleware("UA-27427363-10", {cookieName: '_ga'}));
 var visitor = ua('UA-27427363-10', {https: true});
 
 var options = {};
@@ -21,7 +23,16 @@ app.use('/', function(req, res, next) {
   var clientInfo = {};
   clientInfo.host = req.headers.host;
   clientInfo.url = req.url;
-  visitor.pageview(clientInfo.url, clientInfo.host, "Public").send();
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  clientInfo.userAgent = req.headers['user-agent'];
+  var visitorParams = {
+    dp: clientInfo.url,
+    dt: "Public",
+    dh: clientInfo.host,
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
+  }
+  visitor.pageview(visitorParams).send();
   next();
 } , express.static(__dirname + '/'));
 
@@ -40,7 +51,18 @@ app.use('/api/q', function(req, res) {
   var clientInfo = {};
   clientInfo.host = req.headers.host;
   clientInfo.url = req.url;
-  visitor.pageview(clientInfo.url, clientInfo.host, "Query API").send();
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  clientInfo.userAgent = req.headers['user-agent'];
+  var eventParams = {
+    ec: "API",
+    ea: "Query",
+    el: "Node",
+    ev: node,
+    dp: "/index.html",
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
+  }
+  visitor.event(eventParams).send();
   request(options, function (error, response, body) {
     if (error) {
       var obj = {};
@@ -68,7 +90,18 @@ app.use('/api/tde', function(req, res) {
   var clientInfo = {};
   clientInfo.host = req.headers.host;
   clientInfo.url = req.url;
-  visitor.pageview(clientInfo.url, clientInfo.host, "TDE API").send();
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  clientInfo.userAgent = req.headers['user-agent'];
+  var eventParams = {
+    ec: "API",
+    ea: "TDE",
+    el: "Node",
+    ev: req.body.node,
+    dp: "/index.html",
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
+  }
+  visitor.event(eventParams).send();
   var PythonShell = require('python-shell');
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -118,7 +151,18 @@ app.use('/api/csv', function(req, res) {
   var clientInfo = {};
   clientInfo.host = req.headers.host;
   clientInfo.url = req.url;
-  visitor.pageview(clientInfo.url, clientInfo.host, "CSV API").send();
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  clientInfo.userAgent = req.headers['user-agent'];
+  var eventParams = {
+    ec: "API",
+    ea: "CSV",
+    el: "Node",
+    ev: req.body.node,
+    dp: "/index.html",
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
+  }
+  visitor.event(eventParams).send();
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
     //res.send(response);

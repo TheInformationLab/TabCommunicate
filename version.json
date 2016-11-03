@@ -1,5 +1,9 @@
 [
   {
+    "version" : 0.22,
+    "updatedFiles" : ["appLocal.js"]
+  },
+  {
     "version" : 0.21,
     "updatedFiles" : ["css/app.css"]
   },

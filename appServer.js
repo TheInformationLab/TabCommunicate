@@ -5,7 +5,6 @@ var http = require('http'),
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
-var nodalytics = require('nodalytics');
 
 app.set('trust proxy', 'loopback, linklocal, 172.30.52.0/24, 172.30.51.0/24');
 
@@ -35,7 +34,14 @@ app.use('/', function(req, res, next) {
   clientInfo.method = req.method;
   if (clientInfo.userAgent != "ELB-HealthChecker/1.0") {
     logStream.end(JSON.stringify(clientInfo)+"\n");
-    visitor.pageview(clientInfo.url, clientInfo.host, "Public").send();
+    var visitorParams = {
+      dp: clientInfo.url,
+      dt: "Public",
+      dh: clientInfo.host,
+      uid: clientInfo.ip,
+      ua: clientInfo.userAgent
+    }
+    visitor.pageview(visitorParams).send();
   }
   next();
 } , express.static(__dirname + '/'));
@@ -67,7 +73,9 @@ app.use('/api/q', function(req, res) {
     ea: "Query",
     el: "Node",
     ev: node,
-    dp: "/index.html"
+    dp: "/index.html",
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
   request(options, function (error, response, body) {
@@ -109,7 +117,9 @@ app.use('/api/tde', function(req, res) {
     ea: "TDE",
     el: "Node",
     ev: req.body.node,
-    dp: "/index.html"
+    dp: "/index.html",
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
   var PythonShell = require('python-shell');
@@ -173,7 +183,9 @@ app.use('/api/csv', function(req, res) {
     ea: "CSV",
     el: "Node",
     ev: req.body.node,
-    dp: "/index.html"
+    dp: "/index.html",
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
   getAllData(req, '', 0, function(csv) {
@@ -212,7 +224,9 @@ app.use('/remote/tde', function(req, res) {
     ec: "Remote",
     ea: "TDE",
     el: "Node",
-    ev: req.body.node
+    ev: req.body.node,
+    uid: clientInfo.ip,
+    ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
   var data = req.body;
