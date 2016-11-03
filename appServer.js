@@ -9,7 +9,11 @@ var nodalytics = require('nodalytics');
 
 app.set('trust proxy', 'loopback, linklocal, 172.30.52.0/24, 172.30.51.0/24');
 
-app.use(nodalytics('UA-44126622-6'));
+var ua = require('universal-analytics');
+app.use(ua.middleware("UA-27427363-10", {cookieName: '_ga'}));
+var visitor = ua('UA-27427363-10', {https: true}).debug();
+
+console.log(visitor);
 
 var options = {};
 
@@ -29,7 +33,10 @@ app.use('/', function(req, res, next) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  if (clientInfo.userAgent != "ELB-HealthChecker/1.0") {
+    logStream.end(JSON.stringify(clientInfo)+"\n");
+    visitor.pageview(clientInfo.url, clientInfo.host, "Public").send();
+  }
   next();
 } , express.static(__dirname + '/'));
 
@@ -55,6 +62,14 @@ app.use('/api/q', function(req, res) {
   clientInfo.url = req.url;
   clientInfo.method = req.method;
   logStream.end(JSON.stringify(clientInfo)+"\n");
+  var eventParams = {
+    ec: "API",
+    ea: "Query",
+    el: "Node",
+    ev: node,
+    dp: "/index.html"
+  }
+  visitor.event(eventParams).send();
   request(options, function (error, response, body) {
     if (error) {
       var obj = {};
@@ -89,6 +104,14 @@ app.use('/api/tde', function(req, res) {
   clientInfo.url = req.url;
   clientInfo.method = req.method;
   logStream.end(JSON.stringify(clientInfo)+"\n");
+  var eventParams = {
+    ec: "API",
+    ea: "TDE",
+    el: "Node",
+    ev: req.body.node,
+    dp: "/index.html"
+  }
+  visitor.event(eventParams).send();
   var PythonShell = require('python-shell');
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -145,6 +168,14 @@ app.use('/api/csv', function(req, res) {
   clientInfo.url = req.url;
   clientInfo.method = req.method;
   logStream.end(JSON.stringify(clientInfo)+"\n");
+  var eventParams = {
+    ec: "API",
+    ea: "CSV",
+    el: "Node",
+    ev: req.body.node,
+    dp: "/index.html"
+  }
+  visitor.event(eventParams).send();
   getAllData(req, '', 0, function(csv) {
     //var response = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
     //res.send(response);
@@ -177,6 +208,13 @@ app.use('/remote/tde', function(req, res) {
   clientInfo.url = req.url;
   clientInfo.method = req.method;
   logStream.end(JSON.stringify(clientInfo)+"\n");
+  var eventParams = {
+    ec: "Remote",
+    ea: "TDE",
+    el: "Node",
+    ev: req.body.node
+  }
+  visitor.event(eventParams).send();
   var data = req.body;
   var fs = require('fs');
   var path = require('path');
