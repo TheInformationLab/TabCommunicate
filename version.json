@@ -1,5 +1,9 @@
 [
   {
+    "version" : 0.21,
+    "updatedFiles" : ["css/app.css"]
+  },
+  {
     "version" : 0.2,
     "updatedFiles" : ["index.html"]
   },

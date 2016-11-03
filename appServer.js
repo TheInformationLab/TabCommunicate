@@ -24,8 +24,8 @@ app.use('/', function(req, res, next) {
   var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
-  clientInfo.remoteAddress = req.connection.remoteAddress;
   clientInfo.host = req.headers.host;
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
@@ -50,7 +50,7 @@ app.use('/api/q', function(req, res) {
   var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
-  clientInfo.remoteAddress = req.connection.remoteAddress;
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.host = req.headers.host;
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
@@ -85,7 +85,7 @@ app.use('/api/tde', function(req, res) {
   var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
-  clientInfo.remoteAddress = req.connection.remoteAddress;
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.host = req.headers.host;
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
@@ -142,7 +142,7 @@ app.use('/api/csv', function(req, res) {
   var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
-  clientInfo.remoteAddress = req.connection.remoteAddress;
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.host = req.headers.host;
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
@@ -175,7 +175,7 @@ app.use('/remote/tde', function(req, res) {
   var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
-  clientInfo.remoteAddress = req.connection.remoteAddress;
+  clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.host = req.headers.host;
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
