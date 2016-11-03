@@ -38,7 +38,7 @@ app.use('/', function(req, res, next) {
       dp: clientInfo.url,
       dt: "Public",
       dh: clientInfo.host,
-      uid: clientInfo.ip,
+      uip: clientInfo.ip,
       ua: clientInfo.userAgent
     }
     visitor.pageview(visitorParams).send();
@@ -74,7 +74,7 @@ app.use('/api/q', function(req, res) {
     el: "Node",
     ev: node,
     dp: "/index.html",
-    uid: clientInfo.ip,
+    uip: clientInfo.ip,
     ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
@@ -118,7 +118,7 @@ app.use('/api/tde', function(req, res) {
     el: "Node",
     ev: req.body.node,
     dp: "/index.html",
-    uid: clientInfo.ip,
+    uip: clientInfo.ip,
     ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
@@ -184,7 +184,7 @@ app.use('/api/csv', function(req, res) {
     el: "Node",
     ev: req.body.node,
     dp: "/index.html",
-    uid: clientInfo.ip,
+    uip: clientInfo.ip,
     ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
@@ -225,7 +225,7 @@ app.use('/remote/tde', function(req, res) {
     ea: "TDE",
     el: "Node",
     ev: req.body.node,
-    uid: clientInfo.ip,
+    uip: clientInfo.ip,
     ua: clientInfo.userAgent
   }
   visitor.event(eventParams).send();
