@@ -32,7 +32,7 @@ app.use('/', function(req, res, next) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  if (clientInfo.userAgent != "ELB-HealthChecker/1.0") {
+  if (clientInfo.userAgent != "ELB-HealthChecker/1.0" && (clientInfo.url == "/index.html" || clientInfo.url == "/version.json" )) {
     logStream.end(JSON.stringify(clientInfo)+"\n");
     var visitorParams = {
       dp: clientInfo.url,

@@ -27,7 +27,7 @@ app.use('/', function(req, res, next) {
   clientInfo.userAgent = req.headers['user-agent'];
   var visitorParams = {
     dp: clientInfo.url,
-    dt: "Public",
+    dt: "Local",
     dh: clientInfo.host,
     uip: clientInfo.ip,
     ua: clientInfo.userAgent
@@ -54,7 +54,7 @@ app.use('/api/q', function(req, res) {
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.userAgent = req.headers['user-agent'];
   var eventParams = {
-    ec: "API",
+    ec: "Local API",
     ea: "Query",
     el: "Node",
     ev: node,
@@ -93,7 +93,7 @@ app.use('/api/tde', function(req, res) {
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.userAgent = req.headers['user-agent'];
   var eventParams = {
-    ec: "API",
+    ec: "Local API",
     ea: "TDE",
     el: "Node",
     ev: req.body.node,
@@ -154,7 +154,7 @@ app.use('/api/csv', function(req, res) {
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   clientInfo.userAgent = req.headers['user-agent'];
   var eventParams = {
-    ec: "API",
+    ec: "Local API",
     ea: "CSV",
     el: "Node",
     ev: req.body.node,

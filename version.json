@@ -1,5 +1,9 @@
 [
   {
+    "version" : 0.23,
+    "updatedFiles" : ["appLocal.js","index.html","img/info_Lab.png"]
+  },
+  {
     "version" : 0.22,
     "updatedFiles" : ["appLocal.js"]
   },
