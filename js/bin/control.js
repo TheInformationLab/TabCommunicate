@@ -5,6 +5,7 @@ if(agent.includes("TabCommunicate")) {
         $('#baseUrl').val('');
 }
 var init = function() {
+  $('#loading').hide();
   $('#input').append("<form onsubmit='return false;'>\
                         <div class='form-group'>\
                           <label class='sr-only' for='serverUrl'>Server URL</label>\
@@ -33,10 +34,15 @@ var init = function() {
                         </div>\
                       </form>");
   $('#serverBtn').click(func.getServerSettingsUnauthenticated);
-  $('#loginBtn').click(func.apiSignin);
+  $('#loginBtn').click(function() {
+    func.getServerSettingsUnauthenticated();
+    func.apiSignin();
+    $('#loading').show();
+  });
   $('#logoutBtn').click(function () {
     func.apiSignOut();
     $('#apiControlForm').remove();
+    $('#loading').show();
   });
   if ($('#baseUrl').val() == "") {
     $('#serverUrl').blur(function () {
@@ -90,6 +96,8 @@ var init = function() {
       <button type="button" class="btn btn-secondary btn-sm" data-lang="nodeRequest">NodeJS Request</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpcURL">PHP cURL</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpHttpRequest">PHP HttpRequest</button>\
+      <button type="button" class="btn btn-secondary btn-sm" data-lang="pyHttp">Python http.client</button>\
+      <button type="button" class="btn btn-secondary btn-sm" data-lang="pyRequests">Python Requests</button>\
     </div>');
 
   if (credsToken.length > 0) {
@@ -373,6 +381,7 @@ var apiControls = function () {
     $('#endpointHelp').hide();
     $('#listBtn').click(function() {
       func[$('#listItems').val()](true);
+      $('#loading').show();
     });
     $('#undoBtn').click(function() {
       func[$("#listItems option:selected").attr("undoFunction")](true);

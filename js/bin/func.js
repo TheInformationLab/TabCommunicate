@@ -33,6 +33,7 @@ func.getServerSettingsUnauthenticated = function() {
     contentType : "application/x-www-form-urlencoded"
   };
   $.ajax(settings).done(function (response) {
+    $('#loading').hide();
     writeResponse('xml',response.raw);
     productVersionXML = $(response.raw).find("product_version");
     productVersion = parseFloat(productVersionXML[0].innerHTML);
@@ -44,6 +45,7 @@ func.getServerSettingsUnauthenticated = function() {
     $('#resp-table').html(response.html);
     $('#resp-csv #text').html(response.csv);
   }).fail(function (jqXHR, textStatus) {
+    $('#loading').hide();
     writeResponse('xml',jqXHR.responseXML);
   });
 }
@@ -69,6 +71,7 @@ func.apiSignin = function () {
     contentType : "application/x-www-form-urlencoded"
   }
   $.ajax(settings).done(function (response) {
+    $('#loading').hide();
     writeResponse('xml',response.raw);
     credsToken = $(response.raw).find("credentials").attr("token");
     siteid = $(response.raw).find("site").attr("id");
@@ -79,6 +82,7 @@ func.apiSignin = function () {
     $('#resp-table').html(response.html);
     $('#resp-csv #text').html(response.csv);
   }).fail(function (jqXHR, textStatus) {
+    $('#loading').hide();
     writeResponse('json',textStatus);
   });
 }
@@ -396,6 +400,7 @@ var queryAPI = function (xmlPath, undoVar) {
     contentType : "application/x-www-form-urlencoded"
   }
   $.ajax(settings).done(function (response) {
+    $('#loading').hide();
     writeResponse('xml',response.raw);
     $('#resp-table').html(response.html);
     $('#resp-csv #text').html(response.csv);
@@ -412,6 +417,7 @@ var queryAPI = function (xmlPath, undoVar) {
       }
     }
   }).fail(function (jqXHR, textStatus) {
+    $('#loading').hide();
     writeResponse('xml',jqXHR.responseXML);
   });
 }
@@ -434,6 +440,14 @@ var writeCode = function(language, method, url, headers, body) {
     case 'phpcURL':
     $('#code').html('<pre><code class="PHP" id="scriptOutput"></code></pre>');
       output = lib.phpcURL(method, url, headers, body);
+      break;
+    case 'pyHttp':
+    $('#code').html('<pre><code class="Python" id="scriptOutput"></code></pre>');
+      output = lib.pyHttp(method, url, headers, body);
+      break;
+    case 'pyRequests':
+    $('#code').html('<pre><code class="Python" id="scriptOutput"></code></pre>');
+      output = lib.pyRequests(method, url, headers, body);
       break;
   }
   $('#code #scriptOutput').text(output);

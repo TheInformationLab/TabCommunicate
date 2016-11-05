@@ -104,3 +104,42 @@ if ($err) {\n\
 
   return codebase;
 }
+
+lib.pyRequests = function (method,url,headers,body) {
+  var codebase = 'import requests\n\n\
+url = "'+url+'"\n\n'
+  if (body != undefined) {
+    codebase += 'payload = "'+body.replace(/\\\n\s+/g,'\\n  ') + '"\n\n';
+  }
+  if (headers != undefined) {
+    codebase += 'headers = ' + JSON.stringify(headers) + '\n\n';
+  }
+  codebase += 'response = requests.request("'+method+'", url, data=payload, headers=headers)\n\n\
+print(response.text)';
+
+  return codebase;
+}
+
+lib.pyHttp = function (method,url,headers,body) {
+  var parser = document.createElement('a');
+  parser.href = url;
+  if (parser.protocol == "https:") {
+    var codebase = 'import http.client\n\n\
+conn = http.client.HTTPSConnection("'+parser.hostname+'")\n\n'
+  } else {
+    var codebase = 'import http.client\n\n\
+conn = http.client.HTTPConnection("'+parser.hostname+'")\n\n';
+  }
+  if (body != undefined) {
+    codebase += 'payload = "'+body.replace(/\\\n\s+/g,'\\n  ') + '"\n\n';
+  }
+  if (headers != undefined) {
+    codebase += 'headers = ' + JSON.stringify(headers) + '\n\n';
+  }
+  codebase += 'conn.request("'+method+'", "'+parser.pathname+'", payload, headers)\n\n\
+res = conn.getresponse()\n\
+data = res.read()\n\n\
+print(data.decode("utf-8"))';
+
+  return codebase;
+}

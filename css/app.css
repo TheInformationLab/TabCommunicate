@@ -165,10 +165,17 @@ pre {
 
 #help {
   font-size: 40px;
-  color: rgba(2, 117, 216, 0.4);
+  color: #0275d8;
   cursor: pointer;
 }
 
 #help:hover {
-  color: rgba(2, 117, 216, 0.8);
+  color: #014c8c;
+}
+
+#loading {
+  display: inline;
+  padding-left: 20px;
+  line-height: 30pt;
+  color: #0275d8;
 }
