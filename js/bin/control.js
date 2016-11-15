@@ -35,8 +35,10 @@ var init = function() {
                       </form>");
   $('#serverBtn').click(func.getServerSettingsUnauthenticated);
   $('#loginBtn').click(function() {
-    func.getServerSettingsUnauthenticated();
-    func.apiSignin();
+    func.getServerSettingsUnauthenticated(function(apiVersion) {
+      console.log(apiVersion);
+      func.apiSignin();
+    });
     $('#loading').show();
   });
   $('#logoutBtn').click(function () {
@@ -47,7 +49,9 @@ var init = function() {
   if ($('#baseUrl').val() == "") {
     $('#serverUrl').blur(function () {
       setCookie('serverUrl',$('#serverUrl').val());
-      func.getServerSettingsUnauthenticated();
+      func.getServerSettingsUnauthenticated(function(apiVersion) {
+        console.log(apiVersion);
+      });
     });
     $('#site').blur(function () {
       setCookie('site',$('#site').val());
@@ -69,7 +73,9 @@ var init = function() {
   } else {
     $('#serverUrl').blur(function () {
       localStorage.serverUrl = $('#serverUrl').val();
-      func.getServerSettingsUnauthenticated();
+      func.getServerSettingsUnauthenticated(function(apiVersion) {
+        console.log(apiVersion);
+      });
     });
     $('#site').blur(function () {
       localStorage.site = $('#site').val();

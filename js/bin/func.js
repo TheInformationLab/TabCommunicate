@@ -11,7 +11,7 @@ if (getCookie('apiVersion')) {
 
 var func = {};
 
-func.getServerSettingsUnauthenticated = function() {
+func.getServerSettingsUnauthenticated = function(callback) {
   method = 'GET',
   url = $('#serverUrl').val()+'/manual/auth?format=xml',
   headers = {
@@ -41,6 +41,7 @@ func.getServerSettingsUnauthenticated = function() {
     if (productVersion >= 9.3) { apiVersion = 2.2 } else
     if (productVersion >= 9.2) { apiVersion = 2.1 } else
     { apiVersion = 2.0 }
+    callback(apiVersion);
     refreshVariables();
     $('#resp-table').html(response.html);
     $('#resp-csv #text').html(response.csv);
