@@ -1,5 +1,9 @@
 [
   {
+    "version" : 0.32,
+    "updatedFiles" : ["index.html"]
+  },
+  {
     "version" : 0.3,
     "updatedFiles" : ["index.html","js/bin/control.js","js/bin/func.js","js/bin/library.js","css/app.css"]
   },

@@ -1,6 +1,6 @@
 {
   "name": "TabCommunicate",
-  "version": "0.31",
+  "version": "0.32",
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.2",
