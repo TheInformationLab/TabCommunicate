@@ -21,9 +21,10 @@ app.use(cors());
 app.use( bodyParser.json({limit: '5000mb'}) );       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded({ extended:true, limit: '5000mb', parameterLimit: 10000000}));
 
-app.use('/download', function(req, res, next) {
+app.use('/download', function(req, res) {
+  console.log("download");
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.host = req.headers.host;
@@ -32,7 +33,7 @@ app.use('/download', function(req, res, next) {
   clientInfo.url = req.url;
   clientInfo.method = req.method;
   if (clientInfo.userAgent != "ELB-HealthChecker/1.0" && clientInfo.url == "/download") {
-    logStream.end(JSON.stringify(clientInfo)+"\n");
+    //logStream.end(JSON.stringify(clientInfo)+"\n");
     var visitorParams = {
       dp: clientInfo.url,
       dt: "Publc",
@@ -42,56 +43,14 @@ app.use('/download', function(req, res, next) {
     }
     visitor.pageview(visitorParams).send();
   }
-  next();
-}, var options = {
-    // host to forward to
-    host:   'www.theinformationlab.co.uk',
-    // port to forward to
-    port:   80,
-    // path to forward to
-    path:   '/tabcommunicate',
-    // request method
-    method: 'GET',
-    // headers to send
-    headers: req.headers
-  };
-
-  var creq = http.request(options, function(cres) {
-
-    // set encoding
-    cres.setEncoding('utf8');
-
-    // wait for data
-    cres.on('data', function(chunk){
-      res.write(chunk);
-    });
-
-    cres.on('close', function(){
-      // closed, let's end client request as well
-      res.writeHead(cres.statusCode);
-      res.end();
-    });
-
-    cres.on('end', function(){
-      // finished, let's finish client request as well
-      res.writeHead(cres.statusCode);
-      res.end();
-    });
-
-  }).on('error', function(e) {
-    // we got an error, return 500 error to client and log error
-    console.log(e.message);
-    res.writeHead(500);
-    res.end();
-  });
-
-  creq.end();
-);
+  var newurl = 'http://www.theinformationlab.co.uk/tabcommunicate';
+  request(newurl).pipe(res);
+});
 
 
 app.use('/', function(req, res, next) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.host = req.headers.host;
@@ -100,7 +59,7 @@ app.use('/', function(req, res, next) {
   clientInfo.url = req.url;
   clientInfo.method = req.method;
   if (clientInfo.userAgent != "ELB-HealthChecker/1.0" && (clientInfo.url == "/index.html" || clientInfo.url == "/version.json" )) {
-    logStream.end(JSON.stringify(clientInfo)+"\n");
+    //logStream.end(JSON.stringify(clientInfo)+"\n");
     var visitorParams = {
       dp: clientInfo.url,
       dt: "Public",
@@ -126,7 +85,7 @@ app.use('/api/q', function(req, res) {
   delete options.respLang;
   delete options.node;
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -134,7 +93,7 @@ app.use('/api/q', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   var eventParams = {
     ec: "API",
     ea: "Query",
@@ -170,7 +129,7 @@ app.use('/api/q', function(req, res) {
 
 app.use('/api/tde', function(req, res) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -178,7 +137,7 @@ app.use('/api/tde', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   var eventParams = {
     ec: "API",
     ea: "TDE",
@@ -236,7 +195,7 @@ app.use('/api/tde', function(req, res) {
 
 app.use('/api/csv', function(req, res) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -244,7 +203,7 @@ app.use('/api/csv', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   var eventParams = {
     ec: "API",
     ea: "CSV",
@@ -278,7 +237,7 @@ app.use('/api/csv', function(req, res) {
 
 app.use('/remote/tde', function(req, res) {
   var fs = require('fs');
-  var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
+  //var logStream = fs.createWriteStream('/var/log/tabcommunicate/log.txt', {'flags': 'a'});
   var clientInfo = {};
   clientInfo.timestamp = new Date();
   clientInfo.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -286,7 +245,7 @@ app.use('/remote/tde', function(req, res) {
   clientInfo.userAgent = req.headers['user-agent'];
   clientInfo.url = req.url;
   clientInfo.method = req.method;
-  logStream.end(JSON.stringify(clientInfo)+"\n");
+  //logStream.end(JSON.stringify(clientInfo)+"\n");
   var eventParams = {
     ec: "Remote",
     ea: "TDE",
