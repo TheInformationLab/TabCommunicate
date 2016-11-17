@@ -43,8 +43,10 @@ app.use('/download', function(req, res) {
     }
     visitor.pageview(visitorParams).send();
   }
-  var newurl = 'http://www.theinformationlab.co.uk/tabcommunicate';
-  request(newurl).pipe(res);
+  res.writeHead(301,
+    {Location: 'http://www.theinformationlab.co.uk/tabcommunicate'}
+  );
+  res.end();
 });
 
 
