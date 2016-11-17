@@ -1,18 +1,38 @@
 {
   "name": "TabCommunicate",
-  "version": "0.32",
+  "description": "TabCommunicate by Craig Bloodworth, The Information Lab. License GPL3",
+  "licenses": [
+    {
+      "type": "GPLv3",
+      "url": "https://en.wikipedia.org/wiki/GNU_General_Public_License"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "Craig Bloodworth",
+      "email": "craig.bloodworth@theinformationlab.co.uk",
+      "web": "http://www.theinformationlab.co.uk"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Craig Bloodworth",
+      "email": "craig.bloodworth@theinformationlab.co.uk",
+      "web": "http://www.theinformationlab.co.uk"
+    }
+  ],
+  "version": "0.32.0",
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
     "express": "^4.14.0",
-    "json-to-table": "^2.1.5",
-    "json2csv": "^3.4.1",
+    "json-to-table": "^3.0.0",
     "mktemp": "^0.4.0",
-    "node-syntaxhighlighter": "^0.8.1",
     "python-shell": "^0.4.0",
-    "request": "^2.75.0",
-    "simple-xml2json": "^1.2.3"
+    "request": "^2.78.0",
+    "simple-xml2json": "^1.2.3",
+    "universal-analytics": "^0.4.6"
   },
   "scripts": {
     "start": "node appServer.js"

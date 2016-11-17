@@ -1,30 +1,30 @@
 [
   {
-    "version" : 0.32,
+    "version" : "0.32.0",
     "updatedFiles" : ["index.html"]
   },
   {
-    "version" : 0.3,
+    "version" : "0.3.0",
     "updatedFiles" : ["index.html","js/bin/control.js","js/bin/func.js","js/bin/library.js","css/app.css"]
   },
   {
-    "version" : 0.23,
+    "version" : "0.23.0",
     "updatedFiles" : ["appLocal.js","index.html"]
   },
   {
-    "version" : 0.22,
+    "version" : "0.22.0",
     "updatedFiles" : ["appLocal.js"]
   },
   {
-    "version" : 0.21,
+    "version" : "0.21.0",
     "updatedFiles" : ["css/app.css"]
   },
   {
-    "version" : 0.2,
+    "version" : "0.2.0",
     "updatedFiles" : ["index.html"]
   },
   {
-    "version" : 0.11,
+    "version" : "0.11.0",
     "updatedFiles" : ["appLocal.js"]
   }
 ]
