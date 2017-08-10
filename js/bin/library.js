@@ -9,7 +9,10 @@ lib.jsAjax = function(method, url, headers, body) {
     "contentType": "text/xml",\n\
     "dataType": "xml",\n';
   if (headers != undefined) {
-    codebase += '    "headers": '+JSON.stringify(headers)+',\n';
+    var headerStr = JSON.stringify(headers);
+    headerStr = headerStr.replace(/({|\",)/g,"$1\n\t");
+    headerStr = headerStr.replace(/(})/g,"\n\t$1");
+    codebase += '    "headers": '+headerStr+',\n';
   }
   if (body != undefined) {
     codebase += '    "data": "'+body+'"\n';
@@ -140,6 +143,56 @@ conn = http.client.HTTPConnection("'+parser.hostname+'")\n\n';
 res = conn.getresponse()\n\
 data = res.read()\n\n\
 print(data.decode("utf-8"))';
+
+  return codebase;
+}
+
+lib.alteryx = function (method,url,headers,body) {
+  var codebase = `
+// Input field named URL set to value `+url+`
+
+  <Configuration>
+    <URLField>URL</URLField>
+    <OutputMode>String</OutputMode>
+    <CodePage>65001</CodePage>
+    <EncodeURLs value="False" />
+    <Headers>
+      <NameValues>
+        <Item name='Content-Type' value='text/xml'/>\n`;
+  if (headers != undefined) {
+    $.each(headers, function(name, val) {
+      codebase += "       <Item name='"+name+"' value='"+val+"'/>\n";
+    });
+  }
+  codebase += `     </NameValues>
+      <Fields orderChanged="False">
+        <Field name="URL" selected="False" />
+        <Field name="*Unknown" selected="False" />
+      </Fields>
+    </Headers>
+    <Payload>\n`;
+  if (method == "PUT") {
+    codebase += `     <HTTPAction>Custom</HTTPAction>
+      <CustomHTTPAction>PUT</CustomHTTPAction>\n`;
+  } else {
+    codebase += `     <HTTPAction>`+method+`</HTTPAction>\n`;
+  }
+  if (body != undefined) {
+    body = body.replace(/</g,'&lt;');
+    body = body.replace(/>/g,'&gt;');
+    body = body.replace(/\n/g,'');
+    body = body.replace(/\t/g,'');
+    body = body.replace(/\\/g,'');
+    codebase += `     <QueryStringBodyMode>Text</QueryStringBodyMode>
+        <Text>`+body+`</Text>`;
+  }
+  codebase += `
+    </Payload>
+    <UserName />
+    <Password />
+    <numConnections>2</numConnections>
+    <Timeout>600</Timeout>
+  </Configuration>`;
 
   return codebase;
 }

@@ -104,6 +104,7 @@ var init = function() {
       <button type="button" class="btn btn-secondary btn-sm" data-lang="phpHttpRequest">PHP HttpRequest</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="pyHttp">Python http.client</button>\
       <button type="button" class="btn btn-secondary btn-sm" data-lang="pyRequests">Python Requests</button>\
+      <button type="button" class="btn btn-secondary btn-sm" data-lang="alteryx">Alteryx Download</button>\
     </div>');
 
   if (credsToken.length > 0) {
@@ -137,6 +138,31 @@ var apiControls = function () {
   if (!$('.funcForm').length) {
     var listFunctions = {
       nofunc : {label : ' - Select API Endpoint -', version : 1.0, formItems : []},
+      apiAddDatasourcePermissions : {label : 'Add Datasource Permissions', version : 2.0, formItems : [
+        {
+          label: 'datasource-id',
+          type: 'text'
+        },
+        {
+          type: 'multiple',
+          items: [
+            {
+              label: 'user-id',
+              type : 'text'
+            },
+            {
+              label: 'capability-name',
+              type: 'dropdown',
+              values: ['ChangePermissions','Connect','Delete','ExportXml','Read','Write']
+            },
+            {
+              label: 'capability-mode',
+              type: 'dropdown',
+              values: ['Allow','Deny']
+            }
+          ]
+        }
+      ], helpLink: 'Add_Datasource_Permissions'},
       apiAddDatasourceFavorites : {label : 'Add Datasource to Favorites', version : 2.3, formItems : [
         {
           label: 'user-id',
@@ -210,7 +236,7 @@ var apiControls = function () {
           label : 'datasource-id',
           type : 'text'
         }
-      ], csvNode: 'tsresponse.datasource'},
+      ], csvNode: 'tsresponse.datasources.datasource'},
       apiQueryDatasourceConnections : {label : 'Query Datasource Connections', version : 2.3, formItems : [
         {
           label : 'datasource-id',
@@ -296,7 +322,8 @@ var apiControls = function () {
     };
     $('#input').append("<form onsubmit='return false;' id='apiControlForm'><div class='form-group funcForm'>\
                         <select id='listItems' class='form-control'></select>\
-                        </div><button type='submit' id='listBtn' class='btn btn-primary btn-sm'>Run</button>\
+                        </div><button type='submit' id='updateBtn' class='btn btn-secondary btn-sm'>Update</button>\
+                        <button type='submit' id='listBtn' class='btn btn-primary btn-sm'>Run</button>\
                         <button type='submit' id='undoBtn' class='btn btn-info btn-sm'>Undo</button>\
                         <button type='submit' id='endpointHelp' class='btn btn-secondary btn-sm'><i class='fa fa-question-circle' aria-hidden='true'></i></button></form>");
     var listSelect = $('#listItems');
@@ -345,19 +372,18 @@ var apiControls = function () {
           case 'multiple':
             var html = "<form onsubmit='return false;'><div class='row multiple'>";
             $.each(val.items, function(j, subVal) {
+              console.log(subVal);
               switch (subVal.type) {
                 case 'text':
                   html += '<div class="col-xs-3"><label class="sr-only dynamic" for="'+subVal.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+subVal.label+'" placeholder="'+subVal.label+'"></input></div>';
                   break;
                 case 'dropdown':
-                  html += '<div class="col-xs-3"><select class="form-control dynamic" id="'+subVal.label+'"></select></div>';
-                  var dynDrop = $('#' + val.label);
-                  var dropItems = val.values;
+                  html += '<div class="col-xs-3"><select class="form-control dynamic" id="'+subVal.label+'">';
+                  var dropItems = subVal.values;
                   $.each(dropItems, function(k, drop) {
-                    dynDrop.append(
-                        $('<option></option>').val(drop).html(drop)
-                    );
+                    html += '<option value="'+drop+'">'+drop+'</option>';
                   });
+                  html += '</select></div>'
                   break;
               }
             });
@@ -385,6 +411,9 @@ var apiControls = function () {
     $('#listBtn').hide();
     $('#undoBtn').hide();
     $('#endpointHelp').hide();
+    $('#updateBtn').click(function() {
+      func[$('#listItems').val()](false);
+    });
     $('#listBtn').click(function() {
       func[$('#listItems').val()](true);
       $('#loading').show();

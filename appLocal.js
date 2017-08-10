@@ -48,6 +48,9 @@ app.use('/api/q', function(req, res) {
   }
   delete options.respLang;
   delete options.node;
+  if (dataType == "json") {
+    options.headers.Accept = "application/json";
+  }
   var clientInfo = {};
   clientInfo.host = req.headers.host;
   clientInfo.url = req.url;
@@ -198,7 +201,7 @@ var getAllData = function (req, data, page, callback) {
   delete options.node;
   if (page > 1) {
     options.url = options.url + '?pageNumber=' + page;
-;  }
+  }
   request(options, function (error, response, body) {
     if (error) {
       var obj = {};
@@ -251,29 +254,30 @@ var js2table = require('json-to-table');
 var parseOutput = function(dataType, body, node, callback) {
   if (dataType == 'xml') {
     var xmlText = body;
-    var jsonResult = xmlParser.parser( xmlText );
-    result = resolveJSON(jsonResult, node);
-    pagination = resolveJSON(jsonResult, 'tsresponse.pagination');
-    if(pagination) {
-      if ((pagination.pagenumber * pagination.pagesize) >=  pagination.totalavailable) {
-        var more = false;
-        var nextPage = 0;
-      } else {
-        var more = true;
-        var nextPage = pagination.pagenumber + 1;
-      }
-    }
-    jsonArraytoHTMLCSV(body,js2table(result), function(obj) {
-      obj.more = more;
-      obj.nextPage = nextPage;
-      callback(obj);
-    });
+    parsed = xmlParser.parser( xmlText );
+    pagNode = 'tsresponse.pagination';
   } else {
-    var result = body[node];
-    jsonArraytoHTMLCSV(body, js2table(result), function(obj) {
-      callback(obj);
-    });
+    var jsonText = body;
+    parsed = JSON.parse(jsonText);
+    node = node.replace("tsresponse.","");
+    pagNode = 'pagination';
   }
+  result = resolveJSON(parsed, node);
+  pagination = resolveJSON(parsed, pagNode);
+  if(pagination) {
+    if ((pagination.pagenumber * pagination.pagesize) >=  pagination.totalavailable) {
+      var more = false;
+      var nextPage = 0;
+    } else {
+      var more = true;
+      var nextPage = pagination.pagenumber + 1;
+    }
+  }
+  jsonArraytoHTMLCSV(body,js2table(result), function(obj) {
+    obj.more = more;
+    obj.nextPage = nextPage;
+    callback(obj);
+  });
 }
 
 var jsonArraytoHTMLCSV = function(raw, jsarray, callback) {

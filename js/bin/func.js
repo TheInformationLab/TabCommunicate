@@ -1,7 +1,7 @@
 var selectedLang = 'jsAjax',
     credsToken = siteid = contentUrl = userid = "",
-    productVersion = 10.0,
-    apiVersion = 2.3,
+    productVersion = 10.1,
+    apiVersion = 2.4,
     formRows = 1,
     method = url = headers = body = response = undoVal = undefined;
 
@@ -37,7 +37,10 @@ func.getServerSettingsUnauthenticated = function(callback) {
     writeResponse('xml',response.raw);
     productVersionXML = $(response.raw).find("product_version");
     productVersion = parseFloat(productVersionXML[0].innerHTML);
-    if (productVersion >= 10) { apiVersion = 2.3 } else
+    if (productVersion >= 10.3) { apiVersion = 2.6 } else
+    if (productVersion >= 10.2) { apiVersion = 2.5 } else
+    if (productVersion >= 10.1) { apiVersion = 2.4 } else
+    if (productVersion >= 10.0) { apiVersion = 2.3 } else
     if (productVersion >= 9.3) { apiVersion = 2.2 } else
     if (productVersion >= 9.2) { apiVersion = 2.1 } else
     { apiVersion = 2.0 }
@@ -88,6 +91,36 @@ func.apiSignin = function () {
   });
 }
 
+func.apiAddDatasourcePermissions = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/datasources/'+$('#datasource-id').val()+'/permissions',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<permissions>\n\t\t   <datasource id="'+$('#datasource-id').val()+'" />\n\t\t   <granteeCapabilities>';
+    var userId = "";
+  $.each($('.row.multiple'), function(i, row) {
+    var userObj = $(row.children[0]).find("input")[0];
+    var capNameObj = $(row.children[1]).find("select")[0];
+    var capModeObj = $(row.children[2]).find("select")[0];
+    if (userId == "") {
+      userId = userObj.value;
+      body+='\n\t\t\t<user id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    } else if (userId != userObj.value) {
+      userId = userObj.value;
+      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<user id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    } else if (userId == userObj.value) {
+      userId = userObj.value;
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    }
+  });
+  body += '\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t</permissions>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.permissions') }
+}
+
 func.apiAddDatasourceFavorites = function(run) {
   method = 'PUT',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/favorites/'+$('#user-id').val(),
@@ -122,7 +155,7 @@ func.apiAddUsertoSite = function(run) {
   headers = {
     'X-Tableau-Auth' : credsToken
   },
-  body = '<tsRequest>\n\t\t<user name="'+$('#user-name').val()+'"\n\t\tsiteRole="'+$('#site-role').val()+'" \n\t\tauthSetting="'+$('#auth-setting').val()+'" />\n\t</tsRequest>';
+  body = '<tsRequest>\n\t\t <user name="'+$('#user-name').val()+'"\n\t\t siteRole="'+$('#site-role').val()+'" \n\t\t authSetting="'+$('#auth-setting').val()+'" />\n\t</tsRequest>';
   writeCode(selectedLang,method,url,headers,body);
   if (run) { queryAPI('tsresponse.user', 'user.id') }
 }
@@ -386,12 +419,17 @@ func.apiUpdateUser = function(run) {
 }
 
 var queryAPI = function (xmlPath, undoVar) {
+  if (apiVersion >= 2.2) {
+    var respLang = "json";
+  } else {
+    var respLang = "xml";
+  }
   var callVars = {
     "url": url,
     "method": method,
     "body": body,
     "headers" : headers,
-    "respLang": "xml",
+    "respLang": respLang,
     "node" : xmlPath
   };
   var settings = {
@@ -401,8 +439,9 @@ var queryAPI = function (xmlPath, undoVar) {
     contentType : "application/x-www-form-urlencoded"
   }
   $.ajax(settings).done(function (response) {
+    console.log(response);
     $('#loading').hide();
-    writeResponse('xml',response.raw);
+    writeResponse(respLang,response.raw);
     $('#resp-table').html(response.html);
     $('#resp-csv #text').html(response.csv);
     if (undoVar) {
@@ -425,6 +464,9 @@ var queryAPI = function (xmlPath, undoVar) {
 
 var writeCode = function(language, method, url, headers, body) {
   var output = "";
+  if (apiVersion >= 2.2 && !url.includes("/auth")) {
+    headers.Accept = "application/json";
+  }
   switch (language) {
     case 'jsAjax':
       $('#code').html('<pre><code class="JavaScript" id="scriptOutput"></code></pre>');
@@ -450,6 +492,10 @@ var writeCode = function(language, method, url, headers, body) {
     $('#code').html('<pre><code class="Python" id="scriptOutput"></code></pre>');
       output = lib.pyRequests(method, url, headers, body);
       break;
+    case 'alteryx':
+    $('#code').html('<pre><code class="XML" id="scriptOutput"></code></pre>');
+      output = lib.alteryx(method, url, headers, body);
+      break;
   }
   $('#code #scriptOutput').text(output);
   $('pre code').each(function(i, block) {
@@ -464,8 +510,9 @@ var writeResponse = function(dataType, body) {
       var output = formatXml(body);
       break;
     case 'json':
+      var parsed = JSON.parse(body);
       $('#response').html('<pre><code class="json" id="scriptOutput"></code></pre>');
-      var output = JSON.stringify(body, undefined, 2);
+      var output = JSON.stringify(parsed, undefined, 2);
       break;
   }
   $('#response #scriptOutput').text(output);
