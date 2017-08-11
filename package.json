@@ -27,12 +27,13 @@
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
     "express": "^4.14.0",
-    "json-to-table": "^3.0.0",
+    "json-to-table": "^4.0.0",
+    "json2csv": "^3.7.1",
     "mktemp": "^0.4.0",
+    "node-syntaxhighlighter": "^0.8.1",
     "python-shell": "^0.4.0",
     "request": "^2.78.0",
-    "simple-xml2json": "^1.2.3",
-    "universal-analytics": "^0.4.6"
+    "simple-xml2json": "^1.2.3"
   },
   "scripts": {
     "start": "node appServer.js"
