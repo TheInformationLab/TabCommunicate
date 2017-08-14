@@ -5,6 +5,7 @@ var http = require('http'),
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
+var rootDir = "/src";
 
 app.set('trust proxy', 'loopback, linklocal, 172.30.52.0/24, 172.30.51.0/24');
 
@@ -20,6 +21,8 @@ app.use(cors());
 
 app.use( bodyParser.json({limit: '5000mb'}) );       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded({ extended:true, limit: '5000mb', parameterLimit: 10000000}));
+
+app.use('/healthcheck', require('express-healthcheck')());
 
 app.use('/download', function(req, res) {
   console.log("download");
@@ -164,33 +167,33 @@ app.use('/api/tde', function(req, res) {
     var iniFile = 'TabCommunicate-' + randStr + '.ini';
     var headers = csv.match(/^.*/g);
     var headArr = headers[0].split(',');
-    var ini = '[/etc/tabcommunicate/files/' + csvFile + ']\n';
+    var ini = '['+rootDir+'/files/' + csvFile + ']\n';
     ini += 'ColNameHeader=True\n';
     for (i=0;i<headArr.length;i++) {
       var colNo = i + 1;
       ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
     }
-    fs.writeFile('./files/' + iniFile, ini, function(err) {
+    fs.writeFile(rootDir+'/files/' + iniFile, ini, function(err) {
       if(err) {
           console.log(err);
       }
-      fs.writeFile('./files/' + csvFile, csv, function(err) {
+      fs.writeFile(rootDir+'/files/' + csvFile, csv, function(err) {
         if(err) {
             console.log(err);
         }
-        fs.chmodSync('./files/' + csvFile, '744');
-        fs.chmodSync('./files/' + iniFile, '744');
+        fs.chmodSync(rootDir+'/files/' + csvFile, '744');
+        fs.chmodSync(rootDir+'/files/' + iniFile, '744');
         var options = {
-          scriptPath: '/etc/tabcommunicate/files',
-          args: ['/etc/tabcommunicate/files/'+csvFile, '/etc/tabcommunicate/files/'+iniFile]
+          scriptPath: rootDir+'/files',
+          args: [rootDir+'/files/'+csvFile, rootDir+'/files/'+iniFile]
         };
         PythonShell.run('csv2tde.py', options, function (err) {
           if (err) throw err;
-          res.send('./files/' + csvFile.replace('.csv','.tde'));
+          res.send('/files/' + csvFile.replace('.csv','.tde'));
           setTimeout(function () {
-            fs.unlinkSync('./files/' + iniFile);
-            fs.unlinkSync('./files/' + csvFile);
-            fs.unlinkSync('./files/' + csvFile.replace('.csv','.tde'));
+            fs.unlinkSync(rootDir+'/files/' + iniFile);
+            fs.unlinkSync(rootDir+'/files/' + csvFile);
+            fs.unlinkSync(rootDir+'/files/' + csvFile.replace('.csv','.tde'));
           }, 5000);
         });
       });
@@ -225,13 +228,13 @@ app.use('/api/csv', function(req, res) {
     var fs = require('fs');
     var mktemp = require('mktemp');
     var path = require('path');
-    mktemp.createFile('./files/TabCommunicate-XXXXXXX.csv', function(err, tempFile) {
+    mktemp.createFile(rootDir+'/files/TabCommunicate-XXXXXXX.csv', function(err, tempFile) {
       if (err) throw err;
       fs.writeFile(tempFile, csv, function(err) {
         if(err) {
             return console.log(err);
         }
-        res.send(tempFile);
+        res.send(tempFile.replace(rootDir+'',''));
         setTimeout(function () {
           fs.unlinkSync(tempFile);
         }, 5000);
@@ -274,33 +277,33 @@ app.use('/remote/tde', function(req, res) {
     var iniFile = 'TabCommunicate-' + randStr + '.ini';
     var headers = csv.match(/^.*/g);
     var headArr = headers[0].split(',');
-    var ini = '[/etc/tabcommunicate/files/' + csvFile + ']\n';
+    var ini = '['+rootDir+'/files/' + csvFile + ']\n';
     ini += 'ColNameHeader=True\n';
     for (i=0;i<headArr.length;i++) {
       var colNo = i + 1;
       ini += 'col'+colNo+'=' + headArr[i] + ' Text\n';
     }
-    fs.writeFile('./files/' + iniFile, ini, function(err) {
+    fs.writeFile(rootDir+'/files/' + iniFile, ini, function(err) {
       if(err) {
           console.log(err);
       }
-      fs.writeFile('./files/' + csvFile, csv, function(err) {
+      fs.writeFile(rootDir+'/files/' + csvFile, csv, function(err) {
         if(err) {
             console.log(err);
         }
-        fs.chmodSync('./files/' + csvFile, '744');
-        fs.chmodSync('./files/' + iniFile, '744');
+        fs.chmodSync(rootDir+'/files/' + csvFile, '744');
+        fs.chmodSync(rootDir+'/files/' + iniFile, '744');
         var options = {
-          scriptPath: '/etc/tabcommunicate/files',
-          args: ['/etc/tabcommunicate/files/'+csvFile, '/etc/tabcommunicate/files/'+iniFile]
+          scriptPath: rootDir+'/files',
+          args: [rootDir+'/files/'+csvFile, rootDir+'/files/'+iniFile]
         };
         PythonShell.run('csv2tde.py', options, function (err) {
           if (err) throw err;
-          res.send('./files/' + csvFile.replace('.csv','.tde'));
+          res.send(rootDir+'/files/' + csvFile.replace('.csv','.tde'));
           setTimeout(function () {
-            fs.unlinkSync('./files/' + iniFile);
-            fs.unlinkSync('./files/' + csvFile);
-            fs.unlinkSync('./files/' + csvFile.replace('.csv','.tde'));
+            fs.unlinkSync(rootDir+'/files/' + iniFile);
+            fs.unlinkSync(rootDir+'/files/' + csvFile);
+            fs.unlinkSync(rootDir+'/files/' + csvFile.replace('.csv','.tde'));
           }, 5000);
         });
       });
@@ -339,7 +342,6 @@ var getAllData = function (req, data, page, callback) {
         obj.csv = "Command Executed. Tableau Server doesn't return a response body to this command.";
         res.send(obj);
       } else {
-
         parseOutput(dataType, body, node, function(obj) {
           var csv = obj.csv;
           csv = csv.replace(/<br\/>/g,'\n');
@@ -351,6 +353,7 @@ var getAllData = function (req, data, page, callback) {
             options.respLang = dataType;
             options.node = node;
             req.body = options;
+            console.log(obj.nextPage);
             getAllData(req, data, obj.nextPage, callback);
           } else {
             callback(data);
@@ -386,13 +389,14 @@ var parseOutput = function(dataType, body, node, callback) {
   }
   result = resolveJSON(parsed, node);
   pagination = resolveJSON(parsed, pagNode);
+  console.log(pagination);
   if(pagination) {
-    if ((pagination.pagenumber * pagination.pagesize) >=  pagination.totalavailable) {
+    if ((pagination.pageNumber * pagination.pageSize) >=  pagination.totalAvailable) {
       var more = false;
       var nextPage = 0;
     } else {
       var more = true;
-      var nextPage = pagination.pagenumber + 1;
+      var nextPage = pagination.pageNumber + 1;
     }
   }
   jsonArraytoHTMLCSV(body,js2table(result), function(obj) {

@@ -208,6 +208,31 @@ var apiControls = function () {
           values: ['ServerDefault','SAML']
         }
       ], undoFunction: 'apiRemoveUserfromSite', undoVersion: 1.0, helpLink : 'Add_User_to_Site'},
+      apiAddWorkbookPermissions : {label : 'Add Workbook Permissions', version : 2.0, formItems : [
+        {
+          label: 'workbook-id',
+          type: 'text'
+        },
+        {
+          type: 'multiple',
+          items: [
+            {
+              label: 'user-id',
+              type : 'text'
+            },
+            {
+              label: 'capability-name',
+              type: 'dropdown',
+              values: ['AddComment','ChangeHierarchy','ChangePermissions','Delete','ExportData','ExportImage','ExportXml','Filter','Read','ShareView','ViewComments','ViewUnderlyingData','WebAuthoring','Write']
+            },
+            {
+              label: 'capability-mode',
+              type: 'dropdown',
+              values: ['Allow','Deny']
+            }
+          ]
+        }
+      ], helpLink: 'Add_Workbook_Permissions'},
       apiCreateGroup : {label : 'Create Group', version : 2.0, formItems : [
         {
           label: 'new-tableau-server-group-name',
@@ -437,6 +462,9 @@ var apiControls = function () {
         "respLang": "xml",
         "node" : $("#listItems option:selected").attr("csvNode")
       };
+      if (apiVersion >= 2.2) {
+        callVars.respLang = "json";
+      }
       var settings = {
         url : $('#baseUrl').val() + "/api/csv",
         method : "POST",
@@ -459,6 +487,9 @@ var apiControls = function () {
         "respLang": "xml",
         "node" : $("#listItems option:selected").attr("csvNode")
       };
+      if (apiVersion >= 2.2) {
+        callVars.respLang = "json";
+      }
       var settings = {
         url : $('#baseUrl').val() + "/api/tde",
         method : "POST",
