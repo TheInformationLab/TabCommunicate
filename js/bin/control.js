@@ -147,7 +147,13 @@ var apiControls = function () {
           type: 'multiple',
           items: [
             {
-              label: 'user-id',
+              label: 'switch',
+              type: 'dropdown',
+              values: ['group','user'],
+              size: 2
+            },
+            {
+              label: '-id',
               type : 'text'
             },
             {
@@ -162,7 +168,7 @@ var apiControls = function () {
             }
           ]
         }
-      ], helpLink: 'Add_Datasource_Permissions'},
+      ], undoFunction: 'apiDeleteDatasourcePermission', undoVersion: 2.0, helpLink: 'Add_Datasource_Permissions'},
       apiAddDatasourceFavorites : {label : 'Add Datasource to Favorites', version : 2.3, formItems : [
         {
           label: 'user-id',
@@ -177,6 +183,42 @@ var apiControls = function () {
           type: 'text'
         }
       ], helpLink: 'Add_Datasource_to_Favorites'},
+      apiAddDefaultPermissions : {label : 'Add Default Permissions', version : 2.1, formItems : [
+        {
+          label: 'target',
+          type: 'dropdown',
+          values: ['workbooks','datasources']
+        },
+        {
+          label: 'project-id',
+          type: 'text'
+        },
+        {
+          type: 'multiple',
+          items: [
+            {
+              label: 'switch',
+              type: 'dropdown',
+              values: ['group','user'],
+              size: 2
+            },
+            {
+              label: '-id',
+              type : 'text'
+            },
+            {
+              label: 'capability-name',
+              type: 'dropdown',
+              values: ['AddComment','ChangeHierarchy','ChangePermissions','Connect','Delete','ExportData','ExportImage','ExportXml','Filter','Read','ShareView','ViewComments','ViewUnderlyingData','WebAuthoring','Write']
+            },
+            {
+              label: 'capability-mode',
+              type: 'dropdown',
+              values: ['Allow','Deny']
+            }
+          ]
+        }
+      ], undoFunction: 'apiDeleteDefaultPermission', undoVersion: 2.1, helpLink: 'Add_Default_Permissions'},
       apiAddTagstoWorkbook : {label : 'Add Tags to Workbook', version : 1.0, formItems : [
         {
           label: 'workbook-id',
@@ -217,7 +259,13 @@ var apiControls = function () {
           type: 'multiple',
           items: [
             {
-              label: 'user-id',
+              label: 'switch',
+              type: 'dropdown',
+              values: ['group','user'],
+              size: 2
+            },
+            {
+              label: '-id',
               type : 'text'
             },
             {
@@ -239,6 +287,69 @@ var apiControls = function () {
           type : 'text'
         }
       ], undoFunction: 'apiDeleteGroup', undoVersion : 2.1, helpLink: 'Create_Group'},
+      apiDeleteDatasourcePermission : {label : 'Delete Datasource Permission', version : 2.0, formItems : [
+        {
+          label: 'datasource-id',
+          type: 'text'
+        },
+        {
+          label: 'switch',
+          type: 'dropdown',
+          values: ['group','user'],
+          size: 2
+        },
+        {
+          label: '-id',
+          type : 'text',
+          size: 5
+        },
+        {
+          label: 'capability-name',
+          type: 'dropdown',
+          values: ['ChangePermissions','Connect','Delete','ExportXml','Read','Write'],
+          size: 3
+        },
+        {
+          label: 'capability-mode',
+          type: 'dropdown',
+          values: ['Allow','Deny'],
+          size: 2
+        }
+      ], helpLink: 'Delete_Datasource_Permission'},
+      apiDeleteDefaultPermission : {label : 'Delete Default Permission', version : 2.1, formItems : [
+        {
+          label: 'target',
+          type: 'dropdown',
+          values: ['workbooks','datasources']
+        },
+        {
+          label: 'project-id',
+          type: 'text'
+        },
+        {
+          label: 'switch',
+          type: 'dropdown',
+          values: ['group','user'],
+          size: 2
+        },
+        {
+          label: '-id',
+          type : 'text',
+          size: 5
+        },
+        {
+          label: 'capability-name',
+          type: 'dropdown',
+          values: ['AddComment','ChangeHierarchy','ChangePermissions','Connect','Delete','ExportData','ExportImage','ExportXml','Filter','Read','ShareView','ViewComments','ViewUnderlyingData','WebAuthoring','Write'],
+          size: 3
+        },
+        {
+          label: 'capability-mode',
+          type: 'dropdown',
+          values: ['Allow','Deny'],
+          size: 2
+        }
+      ], helpLink: 'Delete_Datasource_Permission'},
       apiDeleteGroup : {label : 'Delete Group', version : 2.1, formItems : [
         {
           label: 'group-id',
@@ -255,6 +366,35 @@ var apiControls = function () {
           type : 'text'
         }
       ], helpLink: 'Delete_Tag_from_Workbook'},
+      apiDeleteWorkbookPermission : {label : 'Delete Workbook Permission', version : 2.0, formItems : [
+        {
+          label: 'workbook-id',
+          type: 'text'
+        },
+        {
+          label: 'switch',
+          type: 'dropdown',
+          values: ['group','user'],
+          size: 2
+        },
+        {
+          label: '-id',
+          type : 'text',
+          size: 5
+        },
+        {
+          label: 'capability-name',
+          type: 'dropdown',
+          values: ['AddComment','ChangeHierarchy','ChangePermissions','Delete','ExportData','ExportImage','ExportXml','Filter','Read','ShareView','ViewComments','ViewUnderlyingData','WebAuthoring','Write'],
+          size: 3
+        },
+        {
+          label: 'capability-mode',
+          type: 'dropdown',
+          values: ['Allow','Deny'],
+          size: 2
+        }
+      ], helpLink: 'Delete_Workbook_Permission'},
       apiGetUsersonSite : {label : 'Get Users on Site', version : 1.0, formItems : [], helpLink: 'Get_Users_on_Site'},
       apiQueryDatasource : {label : 'Query Datasource', version : 1.0, formItems : [
         {
@@ -377,15 +517,21 @@ var apiControls = function () {
     listSelect.change(function() {
       $('.funcForm .dynamic').remove();
       $('.funcForm form').remove();
+      $('.funcForm div').remove();
       var opt = listFunctions[$('#listItems').val()];
       var formItems = opt.formItems;
       $.each(formItems, function(i, val) {
+        if (val.size) {
+          var objSize = '<div class="col-xs-'+val.size+' rowwrap">';
+        } else {
+          var objSize = '';
+        }
         switch (val.type) {
           case 'text':
-            $('.funcForm').append('<label class="sr-only dynamic" for="'+val.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+val.label+'" placeholder="'+val.label+'"></input>');
+            $('.funcForm').append(objSize+'<label class="sr-only dynamic" for="'+val.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+val.label+'" placeholder="'+val.label+'"></input>'+((objSize!='') ? '</div>' : ''));
             break;
           case 'dropdown':
-            $('.funcForm').append('<select class="form-control dynamic" id="'+val.label+'"></select>');
+            $('.funcForm').append(objSize+'<select class="form-control dynamic" id="'+val.label+'"></select>'+((objSize!='') ? '</div>' : ''));
             var dynDrop = $('#' + val.label);
             var dropItems = val.values;
             $.each(dropItems, function(i, val) {
@@ -397,13 +543,17 @@ var apiControls = function () {
           case 'multiple':
             var html = "<form onsubmit='return false;'><div class='row multiple'>";
             $.each(val.items, function(j, subVal) {
-              console.log(subVal);
+              if (subVal.size) {
+                var objSize = subVal.size;
+              } else {
+                var objSize = 3;
+              }
               switch (subVal.type) {
                 case 'text':
-                  html += '<div class="col-xs-3"><label class="sr-only dynamic" for="'+subVal.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+subVal.label+'" placeholder="'+subVal.label+'"></input></div>';
+                  html += '<div class="col-xs-'+objSize+'"><label class="sr-only dynamic" for="'+subVal.label+'">'+val.label+'</label><input type="text" class="form-control dynamic" id="'+subVal.label+'" placeholder="'+subVal.label+'"></input></div>';
                   break;
                 case 'dropdown':
-                  html += '<div class="col-xs-3"><select class="form-control dynamic" id="'+subVal.label+'">';
+                  html += '<div class="col-xs-'+objSize+'"><select class="form-control dynamic" id="'+subVal.label+'">';
                   var dropItems = subVal.values;
                   $.each(dropItems, function(k, drop) {
                     html += '<option value="'+drop+'">'+drop+'</option>';
@@ -416,6 +566,7 @@ var apiControls = function () {
             newVarsRow(html);
         }
       });
+      $('.rowwrap').wrapAll('<div class="row"></div>');
       func[$('#listItems').val()](false);
       writeCode(selectedLang,method,url,headers,body);
       /*$('.funcForm .dynamic').blur(function( event ) {

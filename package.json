@@ -21,7 +21,7 @@
       "web": "http://www.theinformationlab.co.uk"
     }
   ],
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.2",

@@ -100,25 +100,26 @@ func.apiAddDatasourcePermissions = function(run) {
   body = '<tsRequest>\n\t\t<permissions>\n\t\t   <datasource id="'+$('#datasource-id').val()+'" />\n\t\t   <granteeCapabilities>';
     var userId = "";
   $.each($('.row.multiple'), function(i, row) {
-    var userObj = $(row.children[0]).find("input")[0];
-    var capNameObj = $(row.children[1]).find("select")[0];
-    var capModeObj = $(row.children[2]).find("select")[0];
-    if (userId == "") {
+    var switchObj = $(row.children[0]).find("select")[0];
+    var userObj = $(row.children[1]).find("input")[0];
+    var capNameObj = $(row.children[2]).find("select")[0];
+    var capModeObj = $(row.children[3]).find("select")[0];
+    if (userId == "" && userObj.value != "") {
       userId = userObj.value;
-      body+='\n\t\t\t<user id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+='\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
       body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
-    } else if (userId != userObj.value) {
+    } else if (userId != userObj.value && userObj.value != "") {
       userId = userObj.value;
-      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<user id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
       body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
-    } else if (userId == userObj.value) {
+    } else if (userId == userObj.value && userObj.value != "") {
       userId = userObj.value;
       body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
     }
   });
   body += '\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t</permissions>\n\t</tsRequest>';
   writeCode(selectedLang,method,url,headers,body);
-  if (run) { queryAPI('tsresponse.permissions') }
+  if (run) { queryAPI('tsresponse.permissions'), "form" }
 }
 
 func.apiAddDatasourceFavorites = function(run) {
@@ -130,6 +131,37 @@ func.apiAddDatasourceFavorites = function(run) {
   body = '<tsRequest>\n<favorite label="'+$('#favorite-label').val()+'">\n<datasource id="'+$('#datasource-id').val()+'" />\n</favorite>\n</tsRequest>';
   writeCode(selectedLang,method,url,headers,body);
   if (run) { queryAPI('tsresponse.favorites.favorite') }
+}
+
+func.apiAddDefaultPermissions = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/projects/'+$('#project-id').val()+'/default-permissions/'+$('#target').val(),
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<permissions>\n\t\t   <granteeCapabilities>';
+    var userId = "";
+  $.each($('.row.multiple'), function(i, row) {
+    var switchObj = $(row.children[0]).find("select")[0];
+    var userObj = $(row.children[1]).find("input")[0];
+    var capNameObj = $(row.children[2]).find("select")[0];
+    var capModeObj = $(row.children[3]).find("select")[0];
+    if (userId == "" && userObj.value != "") {
+      userId = userObj.value;
+      body+='\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    } else if (userId != userObj.value && userObj.value != "") {
+      userId = userObj.value;
+      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    } else if (userId == userObj.value && userObj.value != "") {
+      userId = userObj.value;
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    }
+  });
+  body += '\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t</permissions>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.permissions'), "form" }
 }
 
 func.apiAddTagstoWorkbook = function(run) {
@@ -169,16 +201,17 @@ func.apiAddWorkbookPermissions = function(run) {
   body = '<tsRequest>\n\t\t<permissions>\n\t\t   <workbook id="'+$('#workbook-id').val()+'" />\n\t\t   <granteeCapabilities>';
     var userId = "";
   $.each($('.row.multiple'), function(i, row) {
-    var userObj = $(row.children[0]).find("input")[0];
-    var capNameObj = $(row.children[1]).find("select")[0];
-    var capModeObj = $(row.children[2]).find("select")[0];
+    var switchObj = $(row.children[0]).find("select")[0];
+    var userObj = $(row.children[1]).find("input")[0];
+    var capNameObj = $(row.children[2]).find("select")[0];
+    var capModeObj = $(row.children[3]).find("select")[0];
     if (userId == "") {
       userId = userObj.value;
-      body+='\n\t\t\t<user id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+='\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
       body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
     } else if (userId != userObj.value) {
       userId = userObj.value;
-      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<user id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
       body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
     } else if (userId == userObj.value) {
       userId = userObj.value;
@@ -199,6 +232,58 @@ func.apiCreateGroup = function(run) {
   body = '<tsRequest>\n\t\t<group name="'+$('#new-tableau-server-group-name').val()+'"/>\n\t</tsRequest>';
   writeCode(selectedLang,method,url,headers,body);
   if (run) { queryAPI('tsresponse.group', 'group.id') }
+}
+
+func.apiDeleteDatasourcePermission = function(run) {
+  method = 'DELETE';
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  if ($('.row.multiple').length == 0) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/datasources/'+$('#datasource-id').val()+'/permissions/'+$('#switch').val()+'s/'+$('#-id').val()+'/'+$('#capability-name').val()+'/'+$('#capability-mode').val();
+    writeCode(selectedLang,method,url,headers,body);
+    if (run) { queryAPI('none') }
+  } else {
+    $.each($('.row.multiple'), function(i, row) {
+      var switchObj = $(row.children[0]).find("select")[0];
+      var userObj = $(row.children[1]).find("input")[0];
+      var capNameObj = $(row.children[2]).find("select")[0];
+      var capModeObj = $(row.children[3]).find("select")[0];
+      if(userObj.value) {
+        url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/datasources/'+$('#datasource-id').val()+'/permissions/'+switchObj.value+'s/'+userObj.value+'/'+capNameObj.value+'/'+capModeObj.value;
+        writeCode(selectedLang,method,url,headers,body);
+        if (run) { queryAPI('none'), 'form' }
+      }
+    });
+    undoVal = undefined;
+  }
+}
+
+func.apiDeleteDefaultPermission = function(run) {
+  method = 'DELETE';
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  if ($('.row.multiple').length == 0) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/projects/'+$('#project-id').val()+'/default-permissions/'+$('#target').val()+'/'+$('#switch').val()+'s/'+$('#-id').val()+'/'+$('#capability-name').val()+'/'+$('#capability-mode').val();
+    writeCode(selectedLang,method,url,headers,body);
+    if (run) { queryAPI('none') }
+  } else {
+    $.each($('.row.multiple'), function(i, row) {
+      var switchObj = $(row.children[0]).find("select")[0];
+      var userObj = $(row.children[1]).find("input")[0];
+      var capNameObj = $(row.children[2]).find("select")[0];
+      var capModeObj = $(row.children[3]).find("select")[0];
+      if(userObj.value) {
+        url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/projects/'+$('#project-id').val()+'/default-permissions/'+$('#target').val()+'/'+switchObj.value+'s/'+userObj.value+'/'+capNameObj.value+'/'+capModeObj.value;
+        writeCode(selectedLang,method,url,headers,body);
+        if (run) { queryAPI('none'), 'form' }
+      }
+    });
+    undoVal = undefined;
+  }
 }
 
 func.apiDeleteGroup = function(run) {
@@ -231,6 +316,32 @@ func.apiDeleteTagfromWorkbook = function(run) {
     $.each($('.row.multiple input'), function(i, row) {
       if($(row).val()) {
         url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags/'+$(row).val();
+        writeCode(selectedLang,method,url,headers,body);
+        if (run) { queryAPI('none'), 'form' }
+      }
+    });
+    undoVal = undefined;
+  }
+}
+
+func.apiDeleteWorkbookPermission = function(run) {
+  method = 'DELETE';
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  if ($('.row.multiple').length == 0) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/permissions/'+$('#switch').val()+'s/'+$('#-id').val()+'/'+$('#capability-name').val()+'/'+$('#capability-mode').val();
+    writeCode(selectedLang,method,url,headers,body);
+    if (run) { queryAPI('none') }
+  } else {
+    $.each($('.row.multiple'), function(i, row) {
+      var switchObj = $(row.children[0]).find("select")[0];
+      var userObj = $(row.children[1]).find("input")[0];
+      var capNameObj = $(row.children[2]).find("select")[0];
+      var capModeObj = $(row.children[3]).find("select")[0];
+      if(userObj.value) {
+        url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/permissions/'+switchObj.value+'s/'+userObj.value+'/'+capNameObj.value+'/'+capModeObj.value;
         writeCode(selectedLang,method,url,headers,body);
         if (run) { queryAPI('none'), 'form' }
       }
@@ -469,7 +580,6 @@ var queryAPI = function (xmlPath, undoVar) {
     contentType : "application/x-www-form-urlencoded"
   }
   $.ajax(settings).done(function (response) {
-    console.log(response);
     $('#loading').hide();
     writeResponse(respLang,response.raw);
     $('#resp-table').html(response.html);
@@ -540,9 +650,13 @@ var writeResponse = function(dataType, body) {
       var output = formatXml(body);
       break;
     case 'json':
-      var parsed = JSON.parse(body);
-      $('#response').html('<pre><code class="json" id="scriptOutput"></code></pre>');
-      var output = JSON.stringify(parsed, undefined, 2);
+      if (body != "Command Executed. Tableau Server doesn't return a response body to this command.") {
+        var parsed = JSON.parse(body);
+        $('#response').html('<pre><code class="json" id="scriptOutput"></code></pre>');
+        var output = JSON.stringify(parsed, undefined, 2);
+      } else {
+        var output = body;
+      }
       break;
   }
   $('#response #scriptOutput').text(output);
