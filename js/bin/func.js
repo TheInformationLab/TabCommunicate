@@ -37,6 +37,7 @@ func.getServerSettingsUnauthenticated = function(callback) {
     writeResponse('xml',response.raw);
     productVersionXML = $(response.raw).find("product_version");
     productVersion = parseFloat(productVersionXML[0].innerHTML);
+    if (productVersion >= 10.4) { apiVersion = 2.7 } else
     if (productVersion >= 10.3) { apiVersion = 2.6 } else
     if (productVersion >= 10.2) { apiVersion = 2.5 } else
     if (productVersion >= 10.1) { apiVersion = 2.4 } else
