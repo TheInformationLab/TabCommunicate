@@ -421,6 +421,28 @@ func.apiDeleteTagfromDatasource = function(run) {
   }
 }
 
+func.apiDeleteTagfromView = function(run) {
+  method = 'DELETE';
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  if (undoVal != "form") {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/views/'+$('#view-id').val()+'/tags/'+$('#tag-name').val();
+    writeCode(selectedLang,method,url,headers,body);
+    if (run) { queryAPI('none') }
+  } else {
+    $.each($('.row.multiple input'), function(i, row) {
+      if($(row).val()) {
+        url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/views/'+$('#view-id').val()+'/tags/'+$(row).val();
+        writeCode(selectedLang,method,url,headers,body);
+        if (run) { queryAPI('none'), 'form' }
+      }
+    });
+    undoVal = undefined;
+  }
+}
+
 func.apiDeleteTagfromWorkbook = function(run) {
   method = 'DELETE';
   headers = {
