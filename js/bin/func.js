@@ -766,8 +766,8 @@ func.apiUpdateUser = function(run) {
   if (run) { queryAPI('tsresponse.user') }
 }
 
-var queryAPI = function (xmlPath, undoVar) {
-  if (apiVersion >= 2.2) {
+var queryAPI = function (xmlPath, undoVar, publish) {
+  if (apiVersion >= 2.2 && !publish) {
     var respLang = "json";
   } else {
     var respLang = "xml";
@@ -780,14 +780,41 @@ var queryAPI = function (xmlPath, undoVar) {
     "respLang": respLang,
     "node" : xmlPath
   };
-  var settings = {
-    url : $('#baseUrl').val() + "/api/q",
-    method : "POST",
-    data : callVars,
-    contentType : "application/x-www-form-urlencoded"
+  if (publish) {
+    var publishSettings = {
+      "url" : url,
+      "method": method,
+      "headers" : headers,
+      "respLang" : respLang,
+      "node" : xmlPath
+    }
+    var settings = {
+      url: $('#baseUrl').val() + "/api/publish",
+      method: "POST",
+      processData: false,
+      headers : {
+        "TabCommunicate-Publish" : true,
+        "TabCommunicate-Settings" : JSON.stringify(publishSettings)
+      },
+      contentType: false,
+      mimeType: "multipart/mixed",
+      data: body
+    }
+  } else {
+    var settings = {
+      url : $('#baseUrl').val() + "/api/q",
+      method : "POST",
+      data : callVars,
+      contentType : "application/x-www-form-urlencoded"
+    }
   }
-  $.ajax(settings).done(function (response) {
+  $.ajax(settings).done(function (resp) {
     $('#loading').hide();
+    if (publish) {
+      var response = JSON.parse(resp);
+    } else {
+      var response = resp;
+    }
     writeResponse(respLang,response.raw);
     $('#resp-table').html(response.html);
     $('#resp-csv #text').html(response.csv);
@@ -809,7 +836,7 @@ var queryAPI = function (xmlPath, undoVar) {
   });
 }
 
-var writeCode = function(language, method, url, headers, body) {
+var writeCode = function(language, method, url, headers, body, publish, reqPayload) {
   var output = "";
   if (apiVersion >= 2.2 && !url.includes("/auth")) {
     headers.Accept = "application/json";
@@ -817,31 +844,31 @@ var writeCode = function(language, method, url, headers, body) {
   switch (language) {
     case 'jsAjax':
       $('#code').html('<pre><code class="JavaScript" id="scriptOutput"></code></pre>');
-      output = lib.jsAjax(method, url, headers,body);
+      output = lib.jsAjax(method, url, headers,body, publish, reqPayload);
       break;
     case 'nodeRequest':
     $('#code').html('<pre><code class="JavaScript" id="scriptOutput"></code></pre>');
-      output = lib.nodeRequest(method, url, headers, body);
+      output = lib.nodeRequest(method, url, headers, body, publish, reqPayload);
       break;
     case 'phpHttpRequest':
     $('#code').html('<pre><code class="PHP" id="scriptOutput"></code></pre>');
-      output = lib.phpHttpRequest(method, url, headers, body);
+      output = lib.phpHttpRequest(method, url, headers, body, publish, reqPayload);
       break;
     case 'phpcURL':
     $('#code').html('<pre><code class="PHP" id="scriptOutput"></code></pre>');
-      output = lib.phpcURL(method, url, headers, body);
+      output = lib.phpcURL(method, url, headers, body, publish, reqPayload);
       break;
     case 'pyHttp':
     $('#code').html('<pre><code class="Python" id="scriptOutput"></code></pre>');
-      output = lib.pyHttp(method, url, headers, body);
+      output = lib.pyHttp(method, url, headers, body, publish, reqPayload);
       break;
     case 'pyRequests':
     $('#code').html('<pre><code class="Python" id="scriptOutput"></code></pre>');
-      output = lib.pyRequests(method, url, headers, body);
+      output = lib.pyRequests(method, url, headers, body, publish, reqPayload);
       break;
     case 'alteryx':
     $('#code').html('<pre><code class="XML" id="scriptOutput"></code></pre>');
-      output = lib.alteryx(method, url, headers, body);
+      output = lib.alteryx(method, url, headers, body, publish, reqPayload);
       break;
   }
   $('#code #scriptOutput').text(output);
