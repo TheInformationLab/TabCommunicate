@@ -157,6 +157,16 @@ var apilist = {
       ]
     }
   ], undoFunction: 'apiDeleteTagfromWorkbook', undoVersion: 1.0, helpLink: 'Add_Tags_to_Workbook'},
+  apiAddUsertoGroup : {label : 'Add User to Group', version : 2.0, formItems : [
+    {
+      label: 'group-id',
+      type : 'text'
+    },
+    {
+      label: 'user-id',
+      type: 'text'
+    }
+  ], undoFunction: 'apiRemoveUserfromGroup', undoVersion: 2.0, helpLink : 'Add_User_to_Group'},
   apiAddUsertoSite : {label : 'Add User to Site', version : 1.0, formItems : [
     {
       label: 'user-name',

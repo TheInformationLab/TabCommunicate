@@ -230,6 +230,17 @@ func.apiAddTagstoWorkbook = function(run) {
   if (run) { queryAPI('tsresponse.tags.tag', "form") }
 }
 
+func.apiAddUsertoGroup = function(run) {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/groups/'+$('#group-id').val()+'/users',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t <user id="'+$('#user-id').val()+'" />\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.user', 'user.id') }
+}
+
 func.apiAddUsertoSite = function(run) {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users',
