@@ -451,7 +451,7 @@ func.apiDeleteTagfromWorkbook = function(run) {
   },
   body = undefined;
   if (undoVal != "form") {
-    $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags/'+$('#tag-name').val();
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags/'+$('#tag-name').val();
     writeCode(selectedLang,method,url,headers,body);
     if (run) { queryAPI('none') }
   } else {
@@ -902,11 +902,11 @@ var writeResponse = function(dataType, body) {
 
 var refreshVariables = function () {
   setCookie('apiVersion', apiVersion);
-  var html = '<strong>API Version</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ apiVersion + '<br/>\
+  var html = '<div id="#resp-variables-content"><strong>API Version</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ apiVersion + '<br/>\
   <strong>Token</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ credsToken + '<br/>\
     <strong>Site ID</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ siteid + '<br/>\
     <strong>Content URL</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ contentUrl + '<br/>\
-    <strong>User ID</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ userid + '<br/>';
+    <strong>User ID</strong> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> '+ userid + '<br/></div>';
   $('#resp-variables').html(html);
 }
 
