@@ -113,7 +113,7 @@ var init = function() {
 
   $('#exportCsv').hide();
   $('#help').click( function() {
-    $('#introModal').modal();
+    $('#introModal').modal('show');
   });
   $('#downloadUpdate').click( function() {
     var win = window.open('https://tabcommunicate.theinformationlab.co.uk/download', '_blank');
@@ -490,7 +490,7 @@ var apiControls = function () {
                         </div><button type='submit' id='updateBtn' class='btn btn-secondary btn-sm'>Update</button>\
                         <button type='submit' id='listBtn' class='btn btn-primary btn-sm'>Run</button>\
                         <button type='submit' id='undoBtn' class='btn btn-info btn-sm'>Undo</button>\
-                        <button type='submit' id='endpointHelp' class='btn btn-secondary btn-sm'><i class='fa fa-question-circle' aria-hidden='true'></i></button></form>");
+                        <button type='submit' id='endpointHelp' class='btn btn-outline-light'><i class='fa fa-question-circle' aria-hidden='true'></i></button></form>");
     var listSelect = $('#listItems');
     $.each(listFunctions, function(val, opt) {
       var label = opt.label;
@@ -518,7 +518,8 @@ var apiControls = function () {
       $('.funcForm .dynamic').remove();
       $('.funcForm form').remove();
       $('.funcForm div').remove();
-      var opt = listFunctions[$('#listItems').val()];
+      $('.funcForm .form-control-file').remove();
+      var opt = apilist[$('#listItems').val()];
       var formItems = opt.formItems;
       $.each(formItems, function(i, val) {
         if (val.size) {
@@ -568,10 +569,6 @@ var apiControls = function () {
       });
       $('.rowwrap').wrapAll('<div class="row"></div>');
       func[$('#listItems').val()](false);
-      writeCode(selectedLang,method,url,headers,body);
-      /*$('.funcForm .dynamic').blur(function( event ) {
-        func[$('#listItems').val()](false);
-      });*/
       $('#listBtn').show();
       $('#undoBtn').hide();
       if (opt.undoFunction && opt.undoVersion <= apiVersion) {
@@ -679,7 +676,11 @@ $(document).ready(function(){
     $(this).addClass('btn-primary');
     $(this).removeClass('btn-secondary');
     selectedLang = $(this).attr('data-lang');
-    writeCode(selectedLang,method,url,headers,body);
+    if ($('#listItems').val() == "nofunc") {
+      writeCode(selectedLang,method,url,headers,body);
+    } else {
+      func[$('#listItems').val()](false);
+    }
   });
 
   var clipboard = new Clipboard('.copyBtn');
