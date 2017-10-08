@@ -391,12 +391,12 @@ var parseOutput = function(dataType, body, node, callback) {
   pagination = resolveJSON(parsed, pagNode);
   console.log(pagination);
   if(pagination) {
-    if ((pagination.pageNumber * pagination.pageSize) >=  pagination.totalAvailable) {
+    if ((parseInt(pagination.pageNumber) * parseInt(pagination.pageSize)) >=  parseInt(pagination.totalAvailable)) {
       var more = false;
       var nextPage = 0;
     } else {
       var more = true;
-      var nextPage = pagination.pageNumber + 1;
+      var nextPage = parseInt(pagination.pageNumber) + 1;
     }
   }
   jsonArraytoHTMLCSV(body,js2table(result), function(obj) {
