@@ -143,7 +143,7 @@ var apiControls = function () {
                         <button type='submit' id='undoBtn' class='btn btn-info btn-sm'>Undo</button>\
                         <button type='submit' id='endpointHelp' class='btn btn-outline-light'><i class='fa fa-question-circle' aria-hidden='true'></i></button></form>");
     var listSelect = $('#listItems');
-    $.each(listFunctions, function(val, opt) {
+    $.each(apilist, function(val, opt) {
       var label = opt.label;
       var funcVer = opt.version;
       if(apiVersion>=funcVer) {
