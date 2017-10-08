@@ -127,6 +127,36 @@ var apilist = {
       ]
     }
   ], undoFunction: 'apiDeleteTagfromDatasource', undoVersion: 1.0, helpLink: 'Add_Tags_to_Datasource'},
+  apiAddTagstoView : {label : 'Add Tags to View', version : 1.0, formItems : [
+    {
+      label: 'view-id',
+      type: 'text'
+    },
+    {
+      type: 'multiple',
+      items: [
+        {
+          label: 'tag',
+          type : 'text'
+        }
+      ]
+    }
+  ], undoFunction: 'apiDeleteTagfromView', undoVersion: 1.0, helpLink: 'Add_Tags_to_View'},
+  apiAddTagstoWorkbook : {label : 'Add Tags to Workbook', version : 1.0, formItems : [
+    {
+      label: 'workbook-id',
+      type: 'text'
+    },
+    {
+      type: 'multiple',
+      items: [
+        {
+          label: 'tag',
+          type : 'text'
+        }
+      ]
+    }
+  ], undoFunction: 'apiDeleteTagfromWorkbook', undoVersion: 1.0, helpLink: 'Add_Tags_to_Workbook'},
   apiAddUsertoSite : {label : 'Add User to Site', version : 1.0, formItems : [
     {
       label: 'user-name',

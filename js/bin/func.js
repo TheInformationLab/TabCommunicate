@@ -213,6 +213,23 @@ func.apiAddTagstoDatasource = function(run) {
   if (run) { queryAPI('tsresponse.tags.tag', "form") }
 }
 
+func.apiAddTagstoWorkbook = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\\\n\t<tags>\\\n';
+  $.each($('.row.multiple input'), function(i, row) {
+    if($(row).val()) {
+      body+= '\t\t<tag label=\'' + $(row).val() + '\' />\\\n'
+    }
+  });
+  body += '\t</tags>\\\n  </tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.tags.tag', "form") }
+}
+
 func.apiAddUsertoSite = function(run) {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users',
