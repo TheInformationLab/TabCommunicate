@@ -652,6 +652,17 @@ func.apiQueryViewsforSite = function(run) {
   if (run) { queryAPI('tsresponse.views.view') }
 }
 
+func.apiQueryWorkbook = function(run) {
+  method = 'GET',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val(),
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.workbook') }
+}
+
 func.apiQueryWorkbooksforSite = function(run) {
   method = 'GET',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks',

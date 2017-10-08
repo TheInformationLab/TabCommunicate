@@ -457,6 +457,13 @@ var apilist = {
   apiQuerySites : {label : 'Query Sites', version : 1.0, formItems : [], helpLink: 'Query_Sites', csvNode: 'tsresponse.sites.site'},
   apiQueryProjects : {label : 'Query Projects', version : 2.0, formItems : [], helpLink: 'Query_Projects', csvNode: 'tsresponse.projects.project'},
   apiQueryViewsforSite : {label : 'Query Views for Site', version : 2.2, formItems : [], helpLink: 'Query_Views_for_Site', csvNode: 'tsresponse.views.view'},
+  apiQueryWorkbook : {label : 'Query Workbook', version : 1.0,
+  formItems : [
+    {
+      label: 'workbook-id',
+      type: 'text'
+    }
+  ], helpLink: 'Query_Workbook', csvNode: 'tsresponse.workbook'},
   apiQueryWorkbooksforSite : {label : 'Query Workbooks for Site', version : 2.3, formItems : [], helpLink: 'Query_Workbooks_for_Site', csvNode: 'tsresponse.workbooks.workbook'},
   apiQueryWorkbooksforUser : {label : 'Query Workbooks for User', version : 1.0, formItems : [
     {
