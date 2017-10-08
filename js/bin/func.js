@@ -373,6 +373,32 @@ func.apiDeleteGroup = function(run) {
   if (run) { queryAPI('none') }
 }
 
+func.apiDeleteProjectPermission = function(run) {
+  method = 'DELETE';
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  if ($('.row.multiple').length == 0) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/projects/'+$('#project-id').val()+'/permissions/'+$('#switch').val()+'s/'+$('#-id').val()+'/'+$('#capability-name').val()+'/'+$('#capability-mode').val();
+    writeCode(selectedLang,method,url,headers,body);
+    if (run) { queryAPI('none') }
+  } else {
+    $.each($('.row.multiple'), function(i, row) {
+      var switchObj = $(row.children[0]).find("select")[0];
+      var userObj = $(row.children[1]).find("input")[0];
+      var capNameObj = $(row.children[2]).find("select")[0];
+      var capModeObj = $(row.children[3]).find("select")[0];
+      if(userObj.value) {
+        url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/projects/'+$('#project-id').val()+'/permissions/'+switchObj.value+'s/'+userObj.value+'/'+capNameObj.value+'/'+capModeObj.value;
+        writeCode(selectedLang,method,url,headers,body);
+        if (run) { queryAPI('none'), 'form' }
+      }
+    });
+    undoVal = undefined;
+  }
+}
+
 func.apiDeleteTagfromWorkbook = function(run) {
   method = 'DELETE';
   headers = {

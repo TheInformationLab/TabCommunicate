@@ -299,6 +299,35 @@ var apilist = {
       type : 'text'
     }
   ], helpLink: 'Delete_Group'},
+  apiDeleteProjectPermission : {label : 'Delete Project Permission', version : 2.0, formItems : [
+    {
+      label: 'project-id',
+      type: 'text'
+    },
+    {
+      label: 'switch',
+      type: 'dropdown',
+      values: ['group','user'],
+      size: 2
+    },
+    {
+      label: '-id',
+      type : 'text',
+      size: 5
+    },
+    {
+      label: 'capability-name',
+      type: 'dropdown',
+      values: ['ProjectLeader','Read','Write'],
+      size: 3
+    },
+    {
+      label: 'capability-mode',
+      type: 'dropdown',
+      values: ['Allow','Deny'],
+      size: 2
+    }
+  ], helpLink: 'Delete_Project_Permission'},
   apiDeleteTagfromWorkbook : {label : 'Delete Tag from Workbook', version : 1.0, formItems : [
     {
       label: 'workbook-id',
