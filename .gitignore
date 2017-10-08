@@ -6,4 +6,9 @@
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-node_modules/
+node_modules
+node_modules/form-data/lib/form_data.js
+
+node_modules/form-data/package.json
+
+node_modules/form-data/README.md
