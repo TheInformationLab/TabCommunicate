@@ -685,6 +685,22 @@ func.apiQueryWorkbooksforUser = function(run) {
   if (run) { queryAPI('tsresponse.workbooks.workbook') }
 }
 
+func.apiRemoveUserfromGroup = function(run) {
+  method = 'DELETE';
+  if ($('#user-id').val() && $('#group-id').val()) {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/groups/'+$('#group-id').val()+'/users/'+$('#user-id').val();
+  } else {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/groups/'+$('#group-id').val()+'/users/'+undoVal;
+    undoVal = undefined;
+  }
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('none') }
+}
+
 func.apiRemoveUserfromSite = function(run) {
   method = 'DELETE';
   if ($('#user-id').val()) {

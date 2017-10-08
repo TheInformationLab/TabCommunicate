@@ -471,6 +471,16 @@ var apilist = {
       type : 'text'
     }
   ], helpLink: 'Query_Workbooks_for_User', csvNode: 'tsresponse.workbooks.workbook'},
+  apiRemoveUserfromGroup : {label : 'Remove User from Group', version : 2.0, formItems : [
+    {
+      label: 'group-id',
+      type : 'text'
+    },
+    {
+      label: 'user-id',
+      type: 'text'
+    }
+  ], helpLink : 'Remove_User_from_Group'},
   apiRemoveUserfromSite : {label : 'Remove User from Site', version : 1.0, formItems : [
     {
       label : 'user-id',
