@@ -81,6 +81,37 @@ var apilist = {
       ]
     }
   ], undoFunction: 'apiDeleteDefaultPermission', undoVersion: 2.1, helpLink: 'Add_Default_Permissions'},
+  apiAddProjectPermissions : {label : 'Add Project Permissions', version : 2.0, formItems : [
+    {
+      label: 'project-id',
+      type: 'text'
+    },
+    {
+      type: 'multiple',
+      items: [
+        {
+          label: 'switch',
+          type: 'dropdown',
+          values: ['group','user'],
+          size: 2
+        },
+        {
+          label: '-id',
+          type : 'text'
+        },
+        {
+          label: 'capability-name',
+          type: 'dropdown',
+          values: ['ProjectLeader','Read','Write']
+        },
+        {
+          label: 'capability-mode',
+          type: 'dropdown',
+          values: ['Allow','Deny']
+        }
+      ]
+    }
+  ], undoFunction: 'apiDeleteProjectPermission', undoVersion: 2.0, helpLink: 'Add_Project_Permissions'},
   apiAddTagstoDatasource : {label : 'Add Tags to Datasource', version : 1.0, formItems : [
     {
       label: 'datasource-id',

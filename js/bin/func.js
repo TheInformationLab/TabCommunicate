@@ -165,9 +165,40 @@ func.apiAddDefaultPermissions = function(run) {
   if (run) { queryAPI('tsresponse.permissions'), "form" }
 }
 
-func.apiAddTagstoWorkbook = function(run) {
+func.apiAddProjectPermissions = function(run) {
   method = 'PUT',
-  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks/'+$('#workbook-id').val()+'/tags',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/projects/'+$('#project-id').val()+'/permissions',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<permissions>\n\t\t   <granteeCapabilities>';
+    var userId = "";
+  $.each($('.row.multiple'), function(i, row) {
+    var switchObj = $(row.children[0]).find("select")[0];
+    var userObj = $(row.children[1]).find("input")[0];
+    var capNameObj = $(row.children[2]).find("select")[0];
+    var capModeObj = $(row.children[3]).find("select")[0];
+    if (userId == "" && userObj.value != "") {
+      userId = userObj.value;
+      body+='\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    } else if (userId != userObj.value && userObj.value != "") {
+      userId = userObj.value;
+      body+='\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t   <granteeCapabilities>\n\t\t\t<'+switchObj.value+' id="'+userId+'" />\n\t\t\t<capabilities>\n';
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    } else if (userId == userObj.value && userObj.value != "") {
+      userId = userObj.value;
+      body+= '\t\t\t\t<capability name="' + capNameObj.value + '" mode="'+capModeObj.value+'" />\n';
+    }
+  });
+  body += '\t\t\t</capabilities>\n\t\t   </granteeCapabilities>\n\t\t</permissions>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.permissions'), "form" }
+}
+
+func.apiAddTagstoDatasource = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/ddatasources/'+$('#datasource-id').val()+'/tags',
   headers = {
     'X-Tableau-Auth' : credsToken
   },
