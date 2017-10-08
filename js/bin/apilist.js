@@ -328,6 +328,26 @@ var apilist = {
       size: 2
     }
   ], helpLink: 'Delete_Project_Permission'},
+  apiDeleteTagfromDatasource : {label : 'Delete Tag from Datasource', version : 1.0, formItems : [
+    {
+      label: 'datasource-id',
+      type : 'text'
+    },
+    {
+      label: 'tag-name',
+      type : 'text'
+    }
+  ], helpLink: 'Delete_Tag_from_Datasource'},
+  apiDeleteTagfromView : {label : 'Delete Tag from View', version : 1.0, formItems : [
+    {
+      label: 'view-id',
+      type : 'text'
+    },
+    {
+      label: 'tag-name',
+      type : 'text'
+    }
+  ], helpLink: 'Delete_Tag_from_View'},
   apiDeleteTagfromWorkbook : {label : 'Delete Tag from Workbook', version : 1.0, formItems : [
     {
       label: 'workbook-id',
