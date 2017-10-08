@@ -216,6 +216,13 @@ var apiControls = function () {
             });
             html+='<div class="col-xs-1"><button type="submit" id="newRow'+formRows+'" class="btn btn-info form-control">+</button></div></div></form>'
             newVarsRow(html);
+            break;
+          case 'boolean':
+            $('.funcForm').append(objSize+'<div class="row"><div class="col-lg-12"><div class="input-group"><span class="input-group-addon"> <input type="checkbox" aria-label="'+val.label+'" id="'+val.label+'"></span><div class="checkbox-label form-control dynamic">'+val.label+'</div></div></div></div>'+((objSize!='') ? '</div>' : ''));
+            break;
+          case 'file':
+            $('.funcForm').append(objSize+'<label class="sr-only dynamic" for="'+val.label+'">'+val.label+'</label><input type="file" class="form-control-file" id="'+val.label+'"></input>'+((objSize!='') ? '</div>' : ''));
+            break;
         }
       });
       $('.rowwrap').wrapAll('<div class="row"></div>');

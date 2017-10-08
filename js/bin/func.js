@@ -362,6 +362,24 @@ func.apiGetUsersonSite = function(run) {
   if (run) { queryAPI('tsresponse.users.user') }
 }
 
+func.apiPublishWorkbook = function(run) {
+  var tcform = new FormData();
+  var reqPayload = '<tsRequest><workbook name=\''+$('#workbook-name').val()+'\' '+(($('#show-tabs-flag').prop('checked')) ? 'showTabs="true"' : '')+'><project id=\''+$('#project-id').val()+'\' /></workbook></tsRequest>';
+  tcform.append('request_payload', reqPayload);
+  var workbookInput = document.getElementById('workbook');
+  var workbook = workbookInput.files[0];
+  tcform.append("tableau_workbook", workbook);
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/workbooks' + (($('#overwrite-flag').prop('checked')) ? '?overwrite=true' : ''),
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = tcform;
+
+  writeCode(selectedLang,method,url,headers,"","tableau_workbook",reqPayload);
+  if (run) { queryAPI('tsresponse.workbook', undefined, true) }
+}
+
 func.apiQueryDatasource = function(run) {
   method = 'GET',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/datasources/'+$('#datasource-id').val(),

@@ -2,9 +2,13 @@ const express = require('express');
 var port = process.env.PORT || 3000;
 var http = require('http'),
     app = express();
+var https = require('https');
+var multer  = require('multer');
 var bodyParser = require('body-parser')
 var cors = require('cors');
 var request = require("request");
+var crypto = require("crypto");
+var FormData = require('form-data');
 var rootDir = "/src";
 
 app.set('trust proxy', 'loopback, linklocal, 172.30.52.0/24, 172.30.51.0/24');
@@ -13,11 +17,93 @@ var ua = require('universal-analytics');
 app.use(ua.middleware("UA-27427363-10", {cookieName: '_ga'}));
 var visitor = ua('UA-27427363-10', {https: true}).debug();
 
-console.log(visitor);
-
 var options = {};
 
+var upload = multer({ dest: 'files/'});
+
 app.use(cors());
+
+alphaNumericEncodingMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AB';
+
+function generateBoundary(){
+    var boundary = "----WebKitFormBoundary";
+    for (var i = 0; i < 4; ++i) {
+        var randomness = crypto.randomBytes(4);
+        boundary += alphaNumericEncodingMap[randomness[3] & 0x3F];
+        boundary += alphaNumericEncodingMap[randomness[2] & 0x3F];
+        boundary += alphaNumericEncodingMap[randomness[1] & 0x3F];
+        boundary += alphaNumericEncodingMap[randomness[0] & 0x3F];
+    }
+    return boundary;
+}
+
+app.post('/api/publish', upload.any(), function(req, res, next) {
+  var settings = JSON.parse(req.headers['tabcommunicate-settings']);
+  var dataType = settings.respLang;
+  var node = settings.node;
+  delete settings.respLang;
+  delete settings.node;
+  if (dataType == "json") {
+    var acceptHeader = "application/json";
+  } else {
+    var acceptHeader = "application/xml";
+  }
+  const { URL } = require('url');
+  const servURL = new URL(settings.url);
+
+  if (servURL.port) {
+    var servPort = servURL.port;
+  } else if (servURL.protocol == "https:") {
+    var servPort = 443;
+  } else {
+    var servPort = 80;
+  }
+
+  var fs = require('fs');
+
+  var form = new FormData();
+  fs.rename(req.files[0].path,'files/'+req.files[0].originalname, function() {
+    form.append('request_payload', req.body["request_payload"], {contentType: 'text/xml'});
+    form.append('tableau_workbook', fs.createReadStream('files/'+req.files[0].originalname),{contentType: 'application/octet-stream'});
+    form.submit(
+      {
+        protocol: servURL.protocol,
+        host: servURL.hostname,
+        port: servPort, // for proxy
+        path: servURL.pathname + servURL.search,
+        method: 'POST',
+        headers: {
+            'X-Tableau-Auth': settings.headers['X-Tableau-Auth'],
+            'Content-Type': 'multipart/mixed; boundary=' + form.getBoundary(),
+            'Accept' : acceptHeader
+        }
+    }, function(err, response) {
+          if (err) {
+            var obj = {};
+            obj.raw = err;
+            obj.html = err;
+            obj.csv = err;
+            res.send(obj);
+          }
+         var str = '';
+          //another chunk of data has been recieved, so append it to `str`
+
+          response.on('data', function (chunk) {
+            str += chunk;
+          });
+
+          //the whole response has been recieved, so we just print it out here
+          response.on('end', function () {
+            parseOutput(dataType, str, node, function(obj) {
+              fs.unlink('files/'+req.files[0].originalname, function() {
+                res.send(obj);
+              });
+            });
+          });
+
+      });
+    });
+});
 
 app.use( bodyParser.json({limit: '5000mb'}) );       // to support JSON-encoded bodies
 app.use( bodyParser.urlencoded({ extended:true, limit: '5000mb', parameterLimit: 10000000}));

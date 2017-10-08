@@ -258,6 +258,28 @@ var apilist = {
     }
   ], helpLink: 'Delete_Workbook_Permission'},
   apiGetUsersonSite : {label : 'Get Users on Site', version : 1.0, formItems : [], helpLink: 'Get_Users_on_Site'},
+  apiPublishWorkbook : {label: 'Publish Workbook', version: 2.0, formItems: [
+    {
+      label : 'overwrite-flag',
+      type : 'boolean'
+    },
+    {
+      label : 'workbook-name',
+      type: 'text'
+    },
+    {
+      label : 'project-id',
+      type: 'text'
+    },
+    {
+      label : 'show-tabs-flag',
+      type : 'boolean'
+    },
+    {
+      label : 'workbook',
+      type : 'file'
+    }
+  ], helpLing: 'Publish_Workbook'},
   apiQueryDatasource : {label : 'Query Datasource', version : 1.0, formItems : [
     {
       label : 'datasource-id',
