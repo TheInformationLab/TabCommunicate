@@ -16,7 +16,7 @@ lib.jsAjax = function(method, url, headers, body, publish, reqPayload) {
       codebase += '    "headers": '+headerStr+',\n';
     }
     if (body != undefined) {
-      codebase += '    "data": "'+body+'"\n';
+      codebase += '    "data": \''+body+'\'\n';
     }
     codebase += '}\n\
     \n\
@@ -69,7 +69,7 @@ lib.nodeRequest = function(method, url, headers, body, publish, reqPayload) {
       codebase += '  headers: '+JSON.stringify(headers)+',\n';
     }
     if (body != undefined) {
-      codebase += '  body: "'+body+'"\n';
+      codebase += '  body: \''+body+'\'\n';
     }
     codebase += '};\n\
     \n\
@@ -137,7 +137,7 @@ lib.phpHttpRequest = function(method, url, headers, body, publish, reqPayload) {
     }
     codebase += "\t));\n"
     if (body != undefined) {
-      codebase += '\t$request->setBody("'+body+'");\n'
+      codebase += '\t$request->setBody(\''+body+'\');\n'
     }
     codebase += "  try {\n\
       $response = $request->send();\n\
@@ -227,7 +227,7 @@ lib.pyRequests = function(method, url, headers, body, publish, reqPayload) {
     var codebase = 'import requests\n\n\
   url = "'+url+'"\n\n'
     if (body != undefined) {
-      codebase += 'payload = "'+body.replace(/\\\n\s+/g,'\\n  ') + '"\n\n';
+      codebase += 'payload = \''+body.replace(/\\\n\s+/g,'\\n  ') + '\'\n\n';
     }
     if (headers != undefined) {
       codebase += 'headers = ' + JSON.stringify(headers) + '\n\n';
@@ -253,7 +253,7 @@ lib.pyHttp = function(method, url, headers, body, publish, reqPayload) {
   conn = http.client.HTTPConnection("'+parser.hostname+'")\n\n';
     }
     if (body != undefined) {
-      codebase += 'payload = "'+body.replace(/\\\n\s+/g,'\\n  ') + '"\n\n';
+      codebase += 'payload = \''+body.replace(/\\\n\s+/g,'\\n  ') + '\'\n\n';
     }
     if (headers != undefined) {
       codebase += 'headers = ' + JSON.stringify(headers) + '\n\n';
