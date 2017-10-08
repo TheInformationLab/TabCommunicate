@@ -15,13 +15,13 @@
     <input type="hidden" id="baseUrl" value="">
     <div class="card" id="inputDiv">
       <h5 class="card-header">Controls</h5>
-      <div class="card-block">
+      <div class="card-body">
         <div id="input"></div>
       </div>
     </div>
     <div class="card" id="codeDiv">
       <h5 class="card-header">Code</h5>
-      <div class="card-block">
+      <div class="card-body">
         <div id="codeLang"></div>
         <div id="code"></div>
         <div id="copyCode">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div id="outputDiv" class="card">
-      <div class="card-header">
+      <div class="card-header" id="outputHeader">
         <ul class="nav nav-pills card-header-pills pull-xs-left">
           <li class="nav-item"><a href="#" class="nav-link active" data-tab="response">Response</a></li>
           <li class="nav-item"><a href="#" class="nav-link" data-tab="resp-table">Table</a></li>
@@ -43,12 +43,12 @@
         <div class="pull-xs-left"><i class="fa fa-spinner fa-pulse fa-3x fa-fw" aria-hidden="true" id="loading"></i></div>
         <div class="pull-xs-right" id="help"><i class='fa fa-question-circle' aria-hidden='true'></i></div>
       </div>
-      <div id="response" class="card-block tab-content current">
+      <div id="response" class="card-body tab-content current">
       </div>
-      <div id="resp-table" class="card-block tab-content">
+      <div id="resp-table" class="card-body tab-content">
 
       </div>
-      <div id="resp-csv" class="card-block tab-content">
+      <div id="resp-csv" class="card-body tab-content">
         <div id="exportCsv">
           <button class="btn btn-outline-info exportBtn" id="csvExportBtn">
             <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export to CSV
@@ -59,15 +59,15 @@
         </div>
         <div id="text"></div>
       </div>
-      <div id="resp-variables" class="card-block tab-content">
+      <div id="resp-variables" class="card-body tab-content">
 
       </div>
-      <div id="scratch-pad" class="card-block tab-content">
+      <div id="scratch-pad" class="card-body tab-content">
         <textarea type="text" class="scratch-pad"></textarea>
       </div>
     </div>
     <div class="modal fade" id="introModal" tabindex="-1" role="dialog" aria-labelledby="introModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -122,7 +122,7 @@
                 <div class="col-xs-2"><b>Password</b></div><div class="col-xs-10">Your Tableau Server password. Again if your server uses SAML authorisation this is your password as configured on the Tableau Server, not the SAML IdP.</div>
               </div>
             </div>
-          <h3>Code</h3>
+          <h3 style="margin-top: 10px;">Code</h3>
           <p>As you make changes and selections in the controls pane watch this pane for some pseudocode output of what you're doing. Use the buttons at the top to switch between code languages depending on what suits your app/script.</p>
           <p>Also look out for the <i class="fa fa-clipboard" aria-hidden="true"></i> button in the bottom right to quickly copy the code into your clipboard.</p>
           <h3>Output</h3>
@@ -156,10 +156,12 @@
   </div>
   </body>
   <script src="js/lib/jquery.min.js"></script>
+  <script src="js/lib/popper.min.js"></script>
   <script src="js/lib/tether.min.js"></script>
   <script src="js/lib/bootstrap.min.js"></script>
   <script src="js/lib/clipboard.min.js"></script>
   <script src="js/bin/library.js"></script>
   <script src="js/bin/func.js"></script>
+  <script src="js/bin/apilist.js"></script>
   <script src="js/bin/control.js"></script>
 </html>

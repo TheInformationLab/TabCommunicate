@@ -45,6 +45,15 @@
   font-size: 16pt;
 }
 
+#resp-variables-content {
+  display: block;
+}
+
+.card-header {
+  display: inline-flex;
+  min-height: 47px;
+}
+
 @media only screen and (max-width: 1055px) {
   [class*="col-"] {
     width: 100%;
@@ -114,6 +123,18 @@
   visibility: hidden;
 }
 
+.checkbox-label {
+  padding: 3px 5px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+  border-left: 0;
+  min-height: 36px;
+}
+
+.form-control-file {
+  margin-top: 5px;
+}
+
 .tab-content{
 	display: none;
 	padding: 15px;
@@ -121,6 +142,10 @@
 
 .tab-content.current{
 	display: inherit;
+}
+
+.nav-item a{
+  color: #868e96;
 }
 
 .scratch-pad {
@@ -163,10 +188,16 @@ pre {
   font-size: 1rem;
 }
 
+#outputHeader {
+  min-height: 65px;
+}
+
 #help {
   font-size: 40px;
   color: #0275d8;
   cursor: pointer;
+  position: fixed;
+  right: 20px;
 }
 
 #help:hover {
@@ -178,4 +209,6 @@ pre {
   padding-left: 20px;
   line-height: 30pt;
   color: #0275d8;
+}
+d8;
 }
