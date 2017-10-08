@@ -294,6 +294,17 @@ func.apiCreateGroup = function(run) {
   if (run) { queryAPI('tsresponse.group', 'group.id') }
 }
 
+func.apiDeleteDatasourceFavorites = function(run) {
+  method = 'DELETE',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/favorites/'+$('#user-id').val()+'/datasources/'+$('#datasource-id').val(),
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('none') }
+}
+
 func.apiDeleteDatasourcePermission = function(run) {
   method = 'DELETE';
   headers = {

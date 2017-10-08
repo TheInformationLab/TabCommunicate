@@ -220,6 +220,16 @@ var apilist = {
       type : 'text'
     }
   ], undoFunction: 'apiDeleteGroup', undoVersion : 2.1, helpLink: 'Create_Group'},
+  apiDeleteDatasourceFavorites : {label : 'Delete Datasource from Favorites', version : 2.3, formItems : [
+    {
+      label: 'user-id',
+      type: 'text'
+    },
+    {
+      label: 'datasource-id',
+      type: 'text'
+    }
+  ], helpLink: 'Delete_Datasource_from_Favorites'},
   apiDeleteDatasourcePermission : {label : 'Delete Datasource Permission', version : 2.0, formItems : [
     {
       label: 'datasource-id',
