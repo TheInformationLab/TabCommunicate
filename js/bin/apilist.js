@@ -488,6 +488,12 @@ var apilist = {
     }
   ], helpLink: 'Remove_User_from_Site'},
   apiServerInfo : {label : 'Server Info', version : 2.4, formItems : [], helpLink: 'Server_Info'},
+  apiSwitchSite : {label : 'Switch Site', version : 2.6, formItems : [
+    {
+      label : 'content-url',
+      type : 'text'
+    }
+  ], helpLink: 'Switch_Site'},
   apiUpdateUser : {label : 'Update User', version : 1.0, formItems : [
     {
       label : 'user-id',

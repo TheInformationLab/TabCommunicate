@@ -737,6 +737,17 @@ func.apiSignOut = function() {
   queryAPI('none');
 }
 
+func.apiSwitchSite = function() {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/switchSite',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<site contentUrl="'+$('#content-url').val()+'"/>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  queryAPI('tsresponse.credentials');
+}
+
 func.apiUpdateUser = function(run) {
   method = 'PUT',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users/'+$('#user-id').val(),
