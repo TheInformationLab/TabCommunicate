@@ -717,6 +717,15 @@ func.apiRemoveUserfromSite = function(run) {
   if (run) { queryAPI('none') }
 }
 
+func.apiServerInfo = function(run) {
+  method = 'GET',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/serverinfo',
+  headers = {},
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.serverInfo') };
+}
+
 func.apiSignOut = function() {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signout',

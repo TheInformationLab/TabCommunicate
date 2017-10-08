@@ -487,6 +487,7 @@ var apilist = {
       type : 'text'
     }
   ], helpLink: 'Remove_User_from_Site'},
+  apiServerInfo : {label : 'Server Info', version : 2.4, formItems : [], helpLink: 'Server_Info'},
   apiUpdateUser : {label : 'Update User', version : 1.0, formItems : [
     {
       label : 'user-id',
