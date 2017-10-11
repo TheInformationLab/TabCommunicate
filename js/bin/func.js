@@ -59,15 +59,23 @@ func.getServerSettingsUnauthenticated = function(callback) {
 func.apiSignin = function () {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signin',
-  headers = undefined,
+  headers = {
+    'User-Agent' : 'TabCommunicate'
+  },
   body = '<tsRequest>\\\n\t\t<credentials name="'+$('#username').val()+'" password="'+$('#password').val()+'">\\\n\t\t\t<site contentUrl="'+$('#site').val()+'"/>\\\n\t\t</credentials>\\\n\t</tsRequest>';
   var callVars = {
     "url": url,
     "method": method,
+    "headers": headers,
     "body": body,
-    "respLang": "xml",
     "node" : "tsresponse.credentials"
   };
+  if (apiVersion >= 2.2) {
+    var respLang = "json";
+  } else {
+    var respLang = "xml";
+  }
+  callVars.respLang = respLang;
   body = body.replace(/(?:password=")(.*)(?:">)/,'password="****">');
   writeCode(selectedLang,method,url,headers,body);
   var settings = {
@@ -78,11 +86,19 @@ func.apiSignin = function () {
   }
   $.ajax(settings).done(function (response) {
     $('#loading').hide();
-    writeResponse('xml',response.raw);
-    credsToken = $(response.raw).find("credentials").attr("token");
-    siteid = $(response.raw).find("site").attr("id");
-    contentUrl = $(response.raw).find("site").attr("contentUrl");
-    userid = $(response.raw).find("user").attr("id");
+    writeResponse(respLang,response.raw);
+    if (respLang == "xml") {
+      credsToken = $(response.raw).find("credentials").attr("token");
+      siteid = $(response.raw).find("site").attr("id");
+      contentUrl = $(response.raw).find("site").attr("contentUrl");
+      userid = $(response.raw).find("user").attr("id");
+    } else {
+      creds = JSON.parse(response.raw);
+      credsToken = creds.credentials.token;
+      siteid = creds.credentials.site.id;
+      contentUrl = creds.credentials.site.contentUrl;
+      userid = creds.credentials.user.id;
+    }
     refreshVariables();
     apiControls();
     $('#resp-table').html(response.html);
@@ -904,7 +920,7 @@ var queryAPI = function (xmlPath, undoVar, publish) {
 
 var writeCode = function(language, method, url, headers, body, publish, reqPayload) {
   var output = "";
-  if (apiVersion >= 2.2 && !url.includes("/auth")) {
+  if (apiVersion >= 2.2 && url.includes("/api/" + apiVersion)) {
     headers.Accept = "application/json";
   }
   switch (language) {
