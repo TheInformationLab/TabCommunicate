@@ -547,6 +547,52 @@ var apilist = {
       type : 'text'
     }
   ], helpLink: 'Switch_Site'},
+  apiUpdateSite : {label : 'Update Site', version : 1.0, formItems : [
+    {
+      label : 'site-id',
+      type : 'text'
+    },
+    {
+      label : 'new-site-name',
+      type : 'text'
+    },
+    {
+      label : 'new-content-url',
+      type : 'text'
+    },
+    {
+      label : 'new-admin-mode',
+      type: 'dropdown',
+      values: ['- New Admin Mode -','ContentAndUsers','ContentOnly',]
+    },
+    {
+      label : 'new-num-users',
+      type : 'text'
+    },
+    {
+      label : 'new-state',
+      type: 'dropdown',
+      values: ['- New State -','Active','Suspended',]
+    },
+    {
+      label : 'new-storage-quota',
+      type : 'text'
+    },
+    {
+      label : 'new-disable-subscriptions',
+      type: 'dropdown',
+      values: ['- New Disable Subscriptions -','true','false',]
+    },
+    {
+      label : 'revision-history-enabled',
+      type: 'dropdown',
+      values: ['- Revision History Enabled -','true','false',]
+    },
+    {
+      label : 'revision-limit',
+      type : 'text'
+    }
+  ], helpLink: 'Update_Site'},
   apiUpdateUser : {label : 'Update User', version : 1.0, formItems : [
     {
       label : 'user-id',

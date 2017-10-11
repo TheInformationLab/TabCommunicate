@@ -794,6 +794,27 @@ func.apiSwitchSite = function() {
   queryAPI('tsresponse.credentials');
 }
 
+func.apiUpdateSite = function(run) {
+  method = 'PUT',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#site-id').val(),
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t<site\n\t';
+  if ($('#new-site-name').val()) { body += '  name="'+$('#new-site-name').val()+'"\n\t' }
+  if ($('#new-content-url').val()) { body += '  contentUrl="'+$('#new-content-url').val()+'"\n\t' }
+  if ($('#new-admin-mode').val() != '- New Admin Mode -') { body += '  adminMode="'+$('#new-admin-mode').val()+'"\n\t' }
+  if ($('#new-num-users').val()) { body += '  userQuota="'+$('#new-num-users').val()+'"\n\t' }
+  if ($('#new-state').val() != '- New State -') { body += '  state="'+$('#new-state').val()+'"\n\t' }
+  if ($('#new-storage-quota').val()) { body += '  storageQuota="'+$('#new-storage-quota').val()+'"\n\t' }
+  if ($('#new-disable-subscriptions').val() != '- New Disable Subscriptions -') { body += '  disableSubscriptions="'+$('#new-disable-subscriptions').val()+'"\n\t' }
+  if ($('#revision-history-enabled').val() != '- Revision History Enabled -') { body += '  revisionHistoryEnabled="'+$('#revision-history-enabled').val()+'"\n\t' }
+  if ($('#revision-limit').val()) { body += '  revisionLimit="'+$('#revision-limit').val()+'"\n\t' }
+  body += '/>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.site') }
+}
+
 func.apiUpdateUser = function(run) {
   method = 'PUT',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+siteid+'/users/'+$('#user-id').val(),
