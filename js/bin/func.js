@@ -411,6 +411,23 @@ func.apiDeleteProjectPermission = function(run) {
   }
 }
 
+func.apiDeleteSite = function(run) {
+  method = 'DELETE';
+  if ($('#switch').val() == 'site-id') {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#value').val();
+  } else if ($('#switch').val() == 'site-name') {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#value').val()+'?key=name';
+  } else {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#value').val()+'?key=contentUrl';
+  }
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('none') }
+}
+
 func.apiDeleteTagfromDatasource = function(run) {
   method = 'DELETE';
   headers = {

@@ -326,6 +326,19 @@ var apilist = {
       type : 'text'
     }
   ], helpLink: 'Delete_Group'},
+  apiDeleteSite : {label : 'Delete Site', version : 1.0, formItems : [
+    {
+      label: 'switch',
+      type: 'dropdown',
+      values: ['site-id','site-name','content-url'],
+      size: 2
+    },
+    {
+      label: 'value',
+      type : 'text',
+      size: 5
+    }
+  ], helpLink: 'Delete_Site'},
   apiDeleteProjectPermission : {label : 'Delete Project Permission', version : 2.0, formItems : [
     {
       label: 'project-id',
