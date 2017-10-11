@@ -494,6 +494,19 @@ var apilist = {
     }
   ], helpLink: 'Query_Job', csvNode: 'tsresponse.job'},
   apiQuerySchedules : {label : 'Query Schedules', version : 2.2, formItems : [], helpLink: 'Query_Schedules', csvNode: 'tsresponse.schedules.schedule'},
+  apiQuerySite : {label : 'Query Site', version : 1.0, formItems : [
+    {
+      label: 'switch',
+      type: 'dropdown',
+      values: ['site-id','site-name','content-url'],
+      size: 2
+    },
+    {
+      label: 'value',
+      type : 'text',
+      size: 5
+    }
+  ], helpLink: 'Query_Site'},
   apiQuerySites : {label : 'Query Sites', version : 1.0, formItems : [], helpLink: 'Query_Sites', csvNode: 'tsresponse.sites.site'},
   apiQueryProjects : {label : 'Query Projects', version : 2.0, formItems : [], helpLink: 'Query_Projects', csvNode: 'tsresponse.projects.project'},
   apiQueryViewsforSite : {label : 'Query Views for Site', version : 2.2, formItems : [], helpLink: 'Query_Views_for_Site', csvNode: 'tsresponse.views.view'},

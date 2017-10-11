@@ -648,6 +648,23 @@ func.apiQuerySchedules = function(run) {
   if (run) { queryAPI('tsresponse.schedules.schedule') }
 }
 
+func.apiQuerySite = function(run) {
+  method = 'GET';
+  if ($('#switch').val() == 'site-id') {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#value').val();
+  } else if ($('#switch').val() == 'site-name') {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#value').val()+'?key=name';
+  } else {
+    url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites/'+$('#value').val()+'?key=contentUrl';
+  }
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = undefined;
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.site') }
+}
+
 func.apiQuerySites = function(run) {
   method = 'GET',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites',
