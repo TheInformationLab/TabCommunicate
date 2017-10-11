@@ -60,7 +60,7 @@ func.apiSignin = function () {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signin',
   headers = undefined,
-  body = "<tsRequest>\\\n\t\t<credentials name='"+$('#username').val()+"' password='"+$('#password').val()+"'>\\\n\t\t\t<site contentUrl='"+$('#site').val()+"'/>\\\n\t\t</credentials>\\\n\t</tsRequest>";
+  body = '<tsRequest>\\\n\t\t<credentials name="'+$('#username').val()+'" password="'+$('#password').val()+'">\\\n\t\t\t<site contentUrl="'+$('#site').val()+'"/>\\\n\t\t</credentials>\\\n\t</tsRequest>';
   var callVars = {
     "url": url,
     "method": method,
@@ -68,7 +68,7 @@ func.apiSignin = function () {
     "respLang": "xml",
     "node" : "tsresponse.credentials"
   };
-  body = body.replace(/(?:password=')(.*)(?:'>)/,"password='****'>");
+  body = body.replace(/(?:password=")(.*)(?:">)/,'password="****">');
   writeCode(selectedLang,method,url,headers,body);
   var settings = {
     url : $('#baseUrl').val() + "/api/q",
@@ -293,6 +293,17 @@ func.apiCreateGroup = function(run) {
   body = '<tsRequest>\n\t\t<group name="'+$('#new-tableau-server-group-name').val()+'"/>\n\t</tsRequest>';
   writeCode(selectedLang,method,url,headers,body);
   if (run) { queryAPI('tsresponse.group', 'group.id') }
+}
+
+func.apiCreateSite = function(run) {
+  method = 'POST',
+  url = $('#serverUrl').val()+'/api/'+apiVersion+'/sites',
+  headers = {
+    'X-Tableau-Auth' : credsToken
+  },
+  body = '<tsRequest>\n\t\t<site name="'+$('#site-name').val()+'"\n\t\t  contentUrl="'+$('#content-url').val() + (($('#admin-mode').val() != ' - admin-mode - ') ? '"\n\t\t  adminMode="'+$('#admin-mode').val() : '') + (($('#num-users').val() != "") ? '"\n\t\t  userQuota="'+$('#num-users').val() : '') + '"\n\t\t  storageQuota="'+$('#storage-quota').val()+'"\n\t\t  disableSubscriptions="'+(($('#disable-subscriptions').prop('checked')) ? 'true' : 'false') + '"/>\n\t</tsRequest>';
+  writeCode(selectedLang,method,url,headers,body);
+  if (run) { queryAPI('tsresponse.site') }
 }
 
 func.apiDeleteDatasourceFavorites = function(run) {

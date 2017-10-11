@@ -220,6 +220,33 @@ var apilist = {
       type : 'text'
     }
   ], undoFunction: 'apiDeleteGroup', undoVersion : 2.1, helpLink: 'Create_Group'},
+  apiCreateSite : {label : 'Create Site', version : 1.0, formItems : [
+    {
+      label: 'site-name',
+      type : 'text'
+    },
+    {
+      label: 'content-url',
+      type : 'text'
+    },
+    {
+      label: 'admin-mode',
+      type: 'dropdown',
+      values: [' - admin-mode - ','ContentAndUsers','ContentOnly']
+    },
+    {
+      label: 'num-users',
+      type: 'text'
+    },
+    {
+      label: 'storage-quota',
+      type: 'text'
+    },
+    {
+      label: 'disable-subscriptions',
+      type: 'boolean'
+    }
+  ], helpLink: 'Create_Site'},
   apiDeleteDatasourceFavorites : {label : 'Delete Datasource from Favorites', version : 2.3, formItems : [
     {
       label: 'user-id',
