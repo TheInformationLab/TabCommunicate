@@ -239,7 +239,7 @@ func.apiAddTagstoWorkbook = function(run) {
   body = '<tsRequest>\\\n\t<tags>\\\n';
   $.each($('.row.multiple input'), function(i, row) {
     if($(row).val()) {
-      body+= '\t\t<tag label=\'' + $(row).val() + '\' />\\\n'
+      body+= '\t\t<tag label="' + $(row).val() + '" />\\\n'
     }
   });
   body += '\t</tags>\\\n  </tsRequest>';
