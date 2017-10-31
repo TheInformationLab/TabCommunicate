@@ -4,7 +4,7 @@ var http = require('http'),
     app = express();
 var https = require('https');
 var multer  = require('multer');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var cors = require('cors');
 var request = require("request");
 var crypto = require("crypto");
@@ -19,7 +19,7 @@ var visitor = ua('UA-27427363-10', {https: true}).debug();
 
 var options = {};
 
-var upload = multer({ dest: 'files/'});
+var upload = multer({ dest: rootDir+'/files'});
 
 app.use(cors());
 
@@ -62,9 +62,9 @@ app.post('/api/publish', upload.any(), function(req, res, next) {
   var fs = require('fs');
 
   var form = new FormData();
-  fs.rename(req.files[0].path,'files/'+req.files[0].originalname, function() {
+  fs.rename(req.files[0].path,rootDir+'/files/'+req.files[0].originalname, function() {
     form.append('request_payload', req.body["request_payload"], {contentType: 'text/xml'});
-    form.append('tableau_workbook', fs.createReadStream('files/'+req.files[0].originalname),{contentType: 'application/octet-stream'});
+    form.append('tableau_workbook', fs.createReadStream(rootDir+'/files/'+req.files[0].originalname),{contentType: 'application/octet-stream'});
     form.submit(
       {
         protocol: servURL.protocol,
@@ -95,7 +95,7 @@ app.post('/api/publish', upload.any(), function(req, res, next) {
           //the whole response has been recieved, so we just print it out here
           response.on('end', function () {
             parseOutput(dataType, str, node, function(obj) {
-              fs.unlink('files/'+req.files[0].originalname, function() {
+              fs.unlink(rootDir+'/files/'+req.files[0].originalname, function() {
                 res.send(obj);
               });
             });

@@ -6,9 +6,7 @@ lib.jsAjax = function(method, url, headers, body, publish, reqPayload) {
       "async": true,\n\
       "crossDomain": true,\n\
       "url":\ "'+url+'",\n\
-      "method": "'+method+'",\n\
-      "contentType": "text/xml",\n\
-      "dataType": "xml",\n';
+      "method": "'+method+'",\n';
     if (headers != undefined) {
       var headerStr = JSON.stringify(headers);
       headerStr = headerStr.replace(/({|\",)/g,"$1\n\t");
@@ -127,9 +125,7 @@ lib.phpHttpRequest = function(method, url, headers, body, publish, reqPayload) {
     $request = new HttpRequest();\n\
     $request->setUrl( '" + url + "' );\n\
     $request->setMethod(HTTP_METH_"+method+");\n\
-    $request->setHeaders(array(\n\
-    \t'Accept' => 'text/xml'\n\
-    \t'Content-Type' => 'text/xml'\n";
+    $request->setHeaders(array(\n";
     if (headers != undefined) {
       $.each(headers, function(name, val) {
         codebase += "\t'"+name+"' => '"+val+"',\n";
@@ -166,8 +162,7 @@ CURLOPT_CUSTOMREQUEST => "'+method+'",\n'
   if (body != undefined) {
     codebase += 'CURLOPT_POSTFIELDS => "'+body.replace(/\"/g,'\\"')+'",\n';
   }
-  codebase += 'CURLOPT_HTTPHEADER => array(\n\
-    \t"content-type: text/xml",\n';
+  codebase += 'CURLOPT_HTTPHEADER => array(\n';
     if (headers != undefined) {
       $.each(headers, function(name, val) {
         codebase += '\t"'+name+': '+val+'",\n';

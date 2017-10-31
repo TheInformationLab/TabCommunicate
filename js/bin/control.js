@@ -13,22 +13,20 @@ var init = function() {
                           <input type='text' class='form-control' id='serverUrl' placeholder='Server URL' value=''/>\
                         </div>\
                         <div class='row'>\
-                          <div class='col-xs-2'>\
+                          <div class='col-xs-1'>\
                           <label class='sr-only' for='site'>Site ID</label>\
                           <input type='text' class='form-control' id='site' placeholder='Site ID' value=''/>\
                           </div>\
-                          <div class='col-xs-3'>\
+                          <div class='col-xs-4'>\
                           <label class='sr-only' for='username'>Username</label>\
                           <input type='text' class='form-control' id='username' placeholder='Username' value=''/>\
                           </div>\
-                          <div class='col-xs-3'>\
+                          <div class='col-xs-4'>\
                           <label class='sr-only' for='password'>Password</label>\
                           <input type='password' class='form-control' id='password' placeholder='Password' value=''/>\
                           </div>\
-                          <div class='col-xs-2'>\
-                          <button type='submit' id='loginBtn' class='btn btn-primary form-control'>Sign In</button>\
-                          </div>\
-                          <div class='col-xs-2'>\
+                          <div class='col-xs-4' style='display: inherit;'>\
+                          <button type='submit' id='loginBtn' class='btn btn-primary form-control' style='margin-right: 10px;'>Sign In</button>\
                           <button type='submit' id='logoutBtn' class='btn btn-info form-control'>Sign Out</button>\
                           </div>\
                         </div>\

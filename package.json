@@ -21,12 +21,11 @@
       "web": "http://www.theinformationlab.co.uk"
     }
   ],
-  "version": "0.5.2",
+  "version": "0.6.0",
   "private": true,
   "dependencies": {
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
-    "crypto": "^1.0.1",
     "express": "^4.14.0",
     "express-healthcheck": "^0.1.0",
     "form-data": "^2.3.1",
@@ -38,7 +37,8 @@
     "node-syntaxhighlighter": "^0.8.1",
     "python-shell": "^0.4.0",
     "request": "^2.78.0",
-    "simple-xml2json": "^1.2.3"
+    "simple-xml2json": "^1.2.3",
+    "universal-analytics": "^0.4.15"
   },
   "scripts": {
     "start": "node appServer.js"

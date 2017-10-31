@@ -60,22 +60,35 @@ func.apiSignin = function () {
   method = 'POST',
   url = $('#serverUrl').val()+'/api/'+apiVersion+'/auth/signin',
   headers = {
-    'User-Agent' : 'TabCommunicate'
-  },
-  body = '<tsRequest>\\\n\t\t<credentials name="'+$('#username').val()+'" password="'+$('#password').val()+'">\\\n\t\t\t<site contentUrl="'+$('#site').val()+'"/>\\\n\t\t</credentials>\\\n\t</tsRequest>';
+    'User-Agent' : 'TabCommunicate',
+  };
+  if (apiVersion >= 2.2) {
+    var bodyObj = {
+      credentials : {
+        name : $('#username').val(),
+        password : $('#password').val(),
+        site : {
+          contentUrl : $('#site').val()
+        }
+      }
+    }
+    body = JSON.stringify(bodyObj);
+    headers["Content-Type"] = "application/json";
+    var respLang = "json";
+  } else {
+    body = '<tsRequest><credentials name="'+$('#username').val()+'" password="'+$('#password').val()+'"><site contentUrl="'+$('#site').val()+'"/></credentials></tsRequest>';
+    headers["Content-Type"] = "application/xml";
+    var respLang = "xml";
+  }
   var callVars = {
     "url": url,
     "method": method,
     "headers": headers,
     "body": body,
+    "respLang" : respLang,
     "node" : "tsresponse.credentials"
   };
-  if (apiVersion >= 2.2) {
-    var respLang = "json";
-  } else {
-    var respLang = "xml";
-  }
-  callVars.respLang = respLang;
+
   body = body.replace(/(?:password=")(.*)(?:">)/,'password="****">');
   writeCode(selectedLang,method,url,headers,body);
   var settings = {
